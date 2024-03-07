@@ -1,22 +1,19 @@
+from os import name
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 
-
-
 Base = automap_base()
 
-# engine, suppose it has two tables 'user' and 'address' set up
-# Define the connection parameters
-server = 'bv-sqldb-free.database.windows.net'
-database = 'bv-server-mysql.mysql.database.azure.com'
-username = 'bodovision'
-password = 'veldig bra Grupp3'
-driver = 'ODBC+Driver+17+for+SQL+Server'
+# Update these parameters to match your MySQL database details
+server = 'bv-server-mysql.mysql.database.azure.com'  # Your Azure MySQL server name
+database = 'myDb'  # Your MySQL database name
+username = 'bodovision'  # Your MySQL username
+password = 'veldig bra Grupp3'  # Your MySQL password
 
-# Create the connection string
-connection_string = f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}'
+# Note: No need for specifying the driver when using mysql-connector-python
+connection_string = f'mysql+mysqlconnector://{username}:{password}@{server}/{database}'
 
 # Create the engine
 engine = create_engine(connection_string, echo=True)
@@ -28,35 +25,29 @@ try:
 except Exception as e:
     print("Connection failed:", e)
 
-# reflect the tables
+# Reflect the tables
 Base.prepare(engine, reflect=True)
 
-# mapped classes are now created with names by default
-# matching that of the table name.
-Contact = Base.classes.contact
-Insurance = Base.classes.insurance
-InsuranceCompany = Base.classes.insurance_company
-Offer = Base.classes.offer
-Settlement = Base.classes.settlement
-UnitType = Base.classes.unit_type
-User = Base.classes.user
+# Mapped classes are created with names by default matching that of the table name.
+# Example: Assuming 'user' table exists in your database
+User = Base.classes.user  # Update this based on actual table names in your database
 
 session = Session(engine)
 
-# rudimentary relationships are produced
-session.commit()
-
-# collection-based relationships are by default named
-# "<classname>_collection"
-
-
-# Create an inspector object
+# Create an inspector object to explore the database
 inspector = inspect(engine)
 
 # Get the table names
 table_names = inspector.get_table_names()
 
-# Print the table names
-print("Tables in the database:")
-for table_name in table_names:
-    print(table_name)
+
+
+if __name__ == "__main__":
+    # Print the table names
+    print("Tables in the database:")
+    for table_name in table_names:
+        print(table_name)
+        for column in inspector.get_columns(table_name):
+            print(column["name"])
+            for foreign_key in inspector.get_foreign_keys(table_name):
+                print(foreign_key)
