@@ -1,7 +1,7 @@
 from os import name
 from flask import Flask, render_template, request, redirect, session,flash,url_for
 import secrets
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from models.usermodel import UserLogin  
 from models.database import Base, db_session
 from auth import auth_bp
@@ -27,7 +27,12 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    return render_template('base.html', title='test')
+    if current_user.is_authenticated:
+        return f'Logged in as {current_user.username}'
+    else:
+        return redirect(url_for('auth.login_view'))
+    
+    #return render_template('base.html', title='test')
 
 
 if name == "__main__":
