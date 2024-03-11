@@ -5,32 +5,41 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
+from flask_login import UserMixin, login_required, login_user, logout_user, current_user, LoginManager
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
-# Update these parameters to match your MySQL database details
+# azure server details
 server = 'bv-server-mysql.mysql.database.azure.com'  # Your Azure MySQL server name
 database = 'myDb'  # Your MySQL database name
 username = 'bodovision'  # Your MySQL username
 password = 'veldig bra Grupp3'  # Your MySQL password
 
+# connection strings
 # Note: No need for specifying the driver when using mysql-connector-python
 connection_string = f'mysql+mysqlconnector://{username}:{password}@{server}/{database}'
-
 sqllite_string = f'sqlite:///project.db'
 
+# app details
 app = Flask (__name__)
 app.secret_key = secrets.token_urlsafe(16)
-# app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 app.config['SQLALCHEMY_DATABASE_URI'] = sqllite_string
 
 
+# sqlalchemy init
 db = SQLAlchemy(app)
 
+# flask login init
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view("users/login")
+
+
+# user tables 
 class InsuranceCompany(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
+
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,15 +49,24 @@ class Contact(db.Model):
     email = db.Column(db.String(90))
     company = db.relationship('InsuranceCompany', backref='contacts')
 
-class User(db.Model):
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(45), unique=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
 class UnitType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unit_name = db.Column(db.String(90))
+
 
 class Insurance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,6 +81,7 @@ class Insurance(db.Model):
     user = db.relationship('User', backref='insurances')
     company = db.relationship('InsuranceCompany', backref='insurances')
 
+
 class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(90))
@@ -70,12 +89,18 @@ class Offer(db.Model):
     price = db.Column(db.Integer)
     insurance = db.relationship('Insurance', backref='offers')
 
+
 class Settlement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unit_id = db.Column(db.Integer, db.ForeignKey('insurance.id'))
     description = db.Column(db.String(300))
     sum = db.Column(db.String(45))
     insurance = db.relationship('Insurance', backref='settlements')
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route('/')
 def index():
@@ -124,6 +149,7 @@ def user_login():
 
         # Check if the user exists and the password is correct
         if user and check_password_hash(user.password_hash, password):
+            login_user(user)  # Log in the user
             return redirect(url_for("user_detail", id=user.id))
         else:
             # You may want to handle invalid login attempts, for example, by rendering an error message
@@ -133,12 +159,14 @@ def user_login():
 
 
 @app.route("/user/<int:id>")
+@login_required
 def user_detail(id):
     user = db.get_or_404(User, id)
     return render_template("user/detail.html", user=user)
 
 
 @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
+@login_required
 def user_delete(id):
     user = db.get_or_404(User, id)
 
