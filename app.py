@@ -5,6 +5,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
+
 
 # Update these parameters to match your MySQL database details
 server = 'bv-server-mysql.mysql.database.azure.com'  # Your Azure MySQL server name
@@ -84,34 +87,55 @@ def user_list():
     users = db.session.execute(db.select(User).order_by(User.username)).scalars()
     return render_template("user/list.html", users=users)
 
+
 @app.route("/users/create", methods=["GET", "POST"])
 def user_create():
     if request.method == "POST":
+        # Generating the password hash
+        password_hash = generate_password_hash(request.form["password"])
+
+        # Creating the new user with the hashed password
         user = User(
             username=request.form["username"],
             # email=request.form["email"],
-            password_hash=request.form["password"]
+            password_hash=password_hash
         )
+        
+        # Adding and committing the user to the database
         db.session.add(user)
         db.session.commit()
+
+        # Redirecting to the user detail page after creation
         return redirect(url_for("user_detail", id=user.id))
 
+    # Render the user creation form for GET requests
     return render_template("user/create.html")
 
-# @app.route("/users/login", methods=["GET"])
-# def user_login():
-#     user = User(
-#         username=request.form["username"],
-#         # email=request.form["email"],
-#         password_hash=request.form["password"]
-#     )
 
-#     return render_template("user/create.html")
+@app.route("/users/login", methods=["GET", "POST"])
+def user_login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        # Retrieve the user from the database based on the provided username
+        user = User.query.filter_by(username=username).first()
+
+        # Check if the user exists and the password is correct
+        if user and check_password_hash(user.password_hash, password):
+            return redirect(url_for("user_detail", id=user.id))
+        else:
+            # You may want to handle invalid login attempts, for example, by rendering an error message
+            return render_template("user/login.html", error="Invalid username or password")
+
+    return render_template("user/login.html")
+
 
 @app.route("/user/<int:id>")
 def user_detail(id):
     user = db.get_or_404(User, id)
     return render_template("user/detail.html", user=user)
+
 
 @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
 def user_delete(id):
