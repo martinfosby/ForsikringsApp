@@ -1,4 +1,3 @@
-from os import name
 from flask import Flask, render_template, request, redirect, session,flash,url_for
 import secrets
 
@@ -12,7 +11,5 @@ def index():
     return render_template('base.html', title='test')
 
 
-if name == "__main__":
+if __name__ == "__main__":
     app.run(debug=True)
-
-

@@ -3,8 +3,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 
-Base = automap_base()
-
 # Update these parameters to match your MySQL database details
 server = 'bv-server-mysql.mysql.database.azure.com'  # Your Azure MySQL server name
 database = 'myDb'  # Your MySQL database name
@@ -17,36 +15,18 @@ connection_string = f'mysql+mysqlconnector://{username}:{password}@{server}/{dat
 # Create the engine
 engine = create_engine(connection_string, echo=True)
 
-# Test the connection
-try:
-    with engine.connect() as connection:
-        print("Connected successfully!")
-except Exception as e:
-    print("Connection failed:", e)
-
-# Reflect the tables
+Base = automap_base()
 Base.prepare(engine, reflect=True)
 
-# Mapped classes are created with names by default matching that of the table name.
-# Example: Assuming 'user' table exists in your database
-User = Base.classes.user  # Update this based on actual table names in your database
-
-session = Session(engine)
-
-# Create an inspector object to explore the database
-inspector = inspect(engine)
-
-# Get the table names
-table_names = inspector.get_table_names()
-
-
+# Access the table 'user'
+User = Base.classes.user
 
 if __name__ == "__main__":
-    # Print the table names
-    print("Tables in the database:")
-    for table_name in table_names:
-        print(table_name)
-        for column in inspector.get_columns(table_name):
-            print(column["name"])
-            for foreign_key in inspector.get_foreign_keys(table_name):
-                print(foreign_key)
+    # Open a connection
+    with engine.connect() as connection:
+        # Query all rows from the 'user' table
+        rows = connection.execute(User.__table__.select()).fetchall()
+        
+        # Iterate over the result and print each row
+        for row in rows:
+            print(row)
