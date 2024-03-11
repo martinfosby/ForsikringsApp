@@ -1,4 +1,4 @@
-from db import session, Base
+from models.database import session, Base
 
 User = Base.classes.user
 # Doesn't support hash properly

@@ -1,4 +1,3 @@
-from curses import meta
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import Table, create_engine, inspect, MetaData
@@ -32,7 +31,7 @@ Base.prepare(engine, reflect=True)
 User = Base.classes.user
 
 
-session = Session(engine)
+db_session = Session(engine)
 
 # Create an inspector object to explore the database
 inspector = inspect(engine)

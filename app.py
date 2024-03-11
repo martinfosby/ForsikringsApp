@@ -1,16 +1,28 @@
 from os import name
 from flask import Flask, render_template, request, redirect, session,flash,url_for
 import secrets
-#from user_bp import user_bp
-#from user_bp.login import login
+from flask_login import LoginManager
+from models.usermodel import UserLogin  
+from models.database import Base, db_session
+from auth import auth_bp
 
 
+
+login_manager = LoginManager()
 app = Flask (__name__)
+login_manager.init_app(app)
 app.secret_key = secrets.token_urlsafe(16)
+app.register_blueprint(auth_bp, url_prefix='/auth')
+
+@login_manager.user_loader
+def load_user(user_id):
+    User = Base.classes.user
+    user = db_session.query(User).get(int(user_id))
+    if user:
+        return UserLogin(user)
+    return None
 
 
-
-#print(login("Kari Normann", "fewf43f4gf5g5"))
 
 
 @app.route('/')
