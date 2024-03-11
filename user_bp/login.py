@@ -1,4 +1,5 @@
-from db import session, Base
+from ..db import session, Base
+import sys
 
 User = Base.classes.user
 # Doesn't support hash properly
@@ -7,7 +8,7 @@ def login(username, password):
     try:
         user = session.query(User).filter_by(username=username).first()
         if user and user.password_hash == password:
-            return (user.username, user.password_hash)
+            return user
         else:
             return None
         
