@@ -98,7 +98,8 @@ def user_create():
         user = User(
             username=request.form["username"],
             # email=request.form["email"],
-            password_hash=password_hash
+            password_hash=password_hash,
+            is_admin=False
         )
         
         # Adding and committing the user to the database
