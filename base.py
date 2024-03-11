@@ -1,8 +1,7 @@
-from os import name
+from curses import meta
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
-from sqlalchemy import inspect
+from sqlalchemy import Table, create_engine, inspect, MetaData
 
 Base = automap_base()
 
@@ -16,7 +15,7 @@ password = 'veldig bra Grupp3'  # Your MySQL password
 connection_string = f'mysql+mysqlconnector://{username}:{password}@{server}/{database}'
 
 # Create the engine
-engine = create_engine(connection_string, echo=True)
+engine = create_engine(connection_string, echo=False)
 
 # Test the connection
 try:
@@ -30,7 +29,8 @@ Base.prepare(engine, reflect=True)
 
 # Mapped classes are created with names by default matching that of the table name.
 # Example: Assuming 'user' table exists in your database
-User = Base.classes.user  # Update this based on actual table names in your database
+User = Base.classes.user
+
 
 session = Session(engine)
 
@@ -41,6 +41,7 @@ inspector = inspect(engine)
 table_names = inspector.get_table_names()
 
 
+# Base.metadata.create_all(engine)
 
 if __name__ == "__main__":
     # Print the table names
