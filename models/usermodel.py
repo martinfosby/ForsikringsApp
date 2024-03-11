@@ -6,8 +6,5 @@ class UserLogin(UserMixin):
         self.username = user.username
         self.password_hash = user.password_hash
 
-    def get_id(self):
-        try:
-            return str(self.id)
-        except AttributeError:
-            raise NotImplementedError('No `id` attribute - override `get_id`')
+    # def get_id(self):
+    #         return str(self.id)
