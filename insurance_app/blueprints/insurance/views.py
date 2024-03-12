@@ -1,5 +1,5 @@
 from insurance import insurance_bp
-from database import db, InsuranceCompany
+from insurance_app.models import db, InsuranceCompany
 
 
 

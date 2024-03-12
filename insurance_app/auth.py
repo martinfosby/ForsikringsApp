@@ -1,6 +1,6 @@
 from flask_login import UserMixin, login_required, login_user, logout_user, current_user, LoginManager
 from insurance_app import app
-from insurance_app.database import User
+from insurance_app.models import User
 
 # flask login init
 login_manager = LoginManager()
