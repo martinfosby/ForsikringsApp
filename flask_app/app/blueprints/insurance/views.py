@@ -1,9 +1,9 @@
-from insurance import insurance_bp
-from insurance_app.models import db, InsuranceCompany
+from flask_app.app.blueprints.insurance import bp
+from flask_app.app.models import db, InsuranceCompany
 
 
 
-@insurance_bp.route('/')
+@bp.route('/')
 def insurance():
     company = InsuranceCompany("Storebrand")
     db.session.add(company)

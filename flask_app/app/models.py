@@ -1,21 +1,18 @@
-from insurance_app import app
-from flask_sqlalchemy import SQLAlchemy
+from flask_app.app.extensions import db
+from flask import current_app
 from flask_login import UserMixin
 
 # sqlalchemy init
-db = SQLAlchemy(app)
 
-
-# Test the connection
-with app.app_context():
+try:
+    # Try connecting to the database
     db.reflect()
-    try:
-        # Try connecting to the database
-        with db.engine.connect() as connection:
-            print("Connected successfully!")
-    except Exception as e:
-        # If connection fails, print the error
-        print("Connection failed:", e)
+    with db.engine.connect() as connection:
+        print("Connected successfully!")
+except Exception as e:
+    # If connection fails, print the error
+    print("Connection failed:", e)
+
 
 class User(db.Model, UserMixin):
     __table__ = db.metadata.tables["user"]

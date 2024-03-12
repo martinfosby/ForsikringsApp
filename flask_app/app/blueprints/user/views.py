@@ -1,18 +1,18 @@
 from flask import Blueprint, render_template, request, redirect, session,flash,url_for
 from flask_login import login_required, login_user, logout_user, current_user, LoginManager
-from insurance_app.models import db, User
-from insurance_app.utils import set_password, check_password_hash
+from flask_app.app.extensions import db
+from flask_app.app.models import User
+from flask_app.app.utils import set_password, check_password_hash
+from flask_app.app.auth import login_manager
+from flask_app.app.blueprints.user import bp
 
-user_bp = Blueprint("user", __name__, static_folder="static", template_folder="templates")
-
-
-@user_bp.route("/users")
+@bp.route("/users")
 def list():
     users = db.session.execute(db.select(User).order_by(User.username)).scalars()
     return render_template("list.html", users=users)
 
 
-@user_bp.route("/users/create", methods=["GET", "POST"])
+@bp.route("/users/create", methods=["GET", "POST"])
 def create():
     if request.method == "POST":
         # Generating the password hash
@@ -37,7 +37,7 @@ def create():
     return render_template("create.html")
 
 
-@user_bp.route("/users/login", methods=["GET", "POST"])
+@bp.route("/users/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"]
@@ -57,14 +57,14 @@ def login():
     return render_template("login.html")
 
 
-@user_bp.route("/user/<int:id>")
+@bp.route("/user/<int:id>")
 @login_required
 def detail(id):
     user = db.get_or_404(User, id)
     return render_template("detail.html", user=user)
 
 
-@user_bp.route("/user/<int:id>/delete", methods=["GET", "POST"])
+@bp.route("/user/<int:id>/delete", methods=["GET", "POST"])
 @login_required
 def delete(id):
     user = db.get_or_404(User, id)

@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "insurance_app.webapp.py",
+                "FLASK_APP": "flask_app",
                 "FLASK_DEBUG": "1"
             },
             "args": [
