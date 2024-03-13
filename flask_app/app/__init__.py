@@ -14,9 +14,9 @@ def create_app(config_class=Config):
         from flask_app.app.blueprints.main import bp as main_bp
         from flask_app.app.blueprints.user import bp as user_bp
         from flask_app.app.blueprints.insurance import bp as insurance_bp
-        login_manager.init_app(app)
-        app.register_blueprint(main_bp, url_prefix="")
-        app.register_blueprint(user_bp, url_prefix="")
-        app.register_blueprint(insurance_bp, url_prefix="")
+    login_manager.init_app(app)
+    app.register_blueprint(main_bp, url_prefix="")
+    app.register_blueprint(user_bp, url_prefix="")
+    app.register_blueprint(insurance_bp, url_prefix="")
 
     return app

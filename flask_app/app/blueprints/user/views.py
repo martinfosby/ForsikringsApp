@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session,flash,u
 from flask_login import login_required, login_user, logout_user, current_user, LoginManager
 from flask_app.app.extensions import db
 from flask_app.app.models import User
-from flask_app.app.utils import set_password, check_password_hash
+from flask_app.app.utils import set_password, check_password
 from flask_app.app.auth import login_manager
 from flask_app.app.blueprints.user import bp
 
@@ -31,7 +31,7 @@ def create():
         db.session.commit()
 
         # Redirecting to the user detail page after creation
-        return redirect(url_for("detail", id=user.id))
+        return redirect(url_for("user.detail", id=user.id))
 
     # Render the user creation form for GET requests
     return render_template("create.html")
@@ -47,9 +47,9 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         # Check if the user exists and the password is correct
-        if user and check_password_hash(user.password_hash, password):
+        if user and check_password(user.password_hash, password):
             login_user(user)  # Log in the user
-            return redirect(url_for("user_detail", id=user.id))
+            return redirect(url_for("user.detail", id=user.id))
         else:
             # You may want to handle invalid login attempts, for example, by rendering an error message
             return render_template("login.html", error="Invalid username or password")
@@ -61,7 +61,10 @@ def login():
 @login_required
 def detail(id):
     user = db.get_or_404(User, id)
-    return render_template("detail.html", user=user)
+    if current_user == user:
+        return render_template("detail.html", user=user)
+    else:
+        return redirect(url_for("user.login"))
 
 
 @bp.route("/user/<int:id>/delete", methods=["GET", "POST"])
