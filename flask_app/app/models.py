@@ -1,5 +1,4 @@
 from flask_app.app.extensions import db
-from flask import current_app
 from flask_login import UserMixin
 
 # sqlalchemy init

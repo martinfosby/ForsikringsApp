@@ -19,6 +19,4 @@ def create_app(config_class=Config):
         app.register_blueprint(user_bp, url_prefix="")
         app.register_blueprint(insurance_bp, url_prefix="")
 
-
-
     return app
