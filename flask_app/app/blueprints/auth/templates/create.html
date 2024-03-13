@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Login</title>
+    <title>Create User</title>
     <!-- Include any CSS stylesheets or scripts you need -->
 </head>
 <body>
-    <h1>User Login</h1>
-    <form method="post" action="{{ url_for('user.login') }}">
+    <h1>Create a New User</h1>
+    <form method="post" action="{{ url_for('.create') }}">
         <label for="username">Username:</label><br>
         <input type="text" id="username" name="username" required><br><br>
 
-        <label for="password">Password:</label><br>
+        <label for="password">Password<br>
         <input type="password" id="password" name="password" required><br><br>
-
-        <button type="submit">Login</button>
+        <button type="submit">Create User</button>
     </form>
-
-
-    {% if error %}
-        <div>{{ error }}</div>
-    {% endif %}
 </body>
 </html>
