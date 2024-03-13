@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
-    <h2>Login</h2>
-    <form method="POST" action="{{ url_for('auth.login') }}">
+    <h2>Register</h2>
+    <form method="POST" action="{{ url_for('auth.register') }}">
         {{ form.hidden_tag() }}
         <p>
             {{ form.username.label }}<br>
@@ -26,7 +26,5 @@
       </ul>
     {% endif %}
   {% endwith %}
-
-
 </body>
 </html>
