@@ -75,3 +75,17 @@ def delete(id):
         return redirect(url_for("user_list"))
 
     return render_template("delete.html", user=user)
+
+
+@bp.route("/user-by-id/<int:id>")
+def user_by_id(id):
+    user = db.get_or_404(User, id)
+    return render_template("show_user.html", user=user)
+
+@bp.route("/user-by-username/<username>")
+def user_by_username(username):
+    user = db.one_or_404(
+        db.select(User).filter_by(username=username),
+        description=f"No user named '{username}'."
+    )
+    return render_template("show_user.html", user=user)
