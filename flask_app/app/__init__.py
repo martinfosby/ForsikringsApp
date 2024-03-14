@@ -14,7 +14,6 @@ def create_app(config_class=Config):
     # app context work
     with app.app_context():
         db.reflect() # get database by reflection
-        # mdb.create_all()
 
     # blueprints
     from flask_app.app.blueprints.main import bp as main_bp
