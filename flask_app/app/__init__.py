@@ -9,7 +9,6 @@ def create_app(config_class=Config):
     # extensions init
     from flask_app.app.extensions import db, login_manager
     db.init_app(app)
-    # mdb.init_app(app)
     login_manager.init_app(app)
 
     # app context work
