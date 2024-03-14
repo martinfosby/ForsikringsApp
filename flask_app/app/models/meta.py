@@ -1,12 +1,12 @@
 from flask_app.app.extensions import db
 
 
-class InsuranceCompanyMeta(db.Model):
+class InsuranceCompany(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
 
-class ContactMeta(db.Model):
+class Contact(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('insurance_company.id'))
@@ -15,19 +15,19 @@ class ContactMeta(db.Model):
     email = db.Column(db.String(90))
     company = db.relationship('InsuranceCompany', backref='contacts')
 
-class UserMeta(db.Model):
+class User(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(45), unique=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean)
 
-class UnitTypeMeta(db.Model):
+class UnitType(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     unit_name = db.Column(db.String(90))
 
-class InsuranceMeta(db.Model):
+class Insurance(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(90))
@@ -41,7 +41,7 @@ class InsuranceMeta(db.Model):
     user = db.relationship('User', backref='insurances')
     company = db.relationship('InsuranceCompany', backref='insurances')
 
-class OfferMeta(db.Model):
+class Offer(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(90))
@@ -49,7 +49,7 @@ class OfferMeta(db.Model):
     price = db.Column(db.Integer)
     insurance = db.relationship('Insurance', backref='offers')
 
-class SettlementMeta(db.Model):
+class Settlement(db.Model):
     __bind_key__ = "meta"
     id = db.Column(db.Integer, primary_key=True)
     unit_id = db.Column(db.Integer, db.ForeignKey('insurance.id'))

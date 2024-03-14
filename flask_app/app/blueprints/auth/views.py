@@ -1,5 +1,4 @@
 from flask import abort, render_template, request, redirect, session,flash,url_for
-import flask
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_app.app.extensions import db, login_manager
 from flask_app.app.models import User
