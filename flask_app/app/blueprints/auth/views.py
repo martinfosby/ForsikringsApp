@@ -6,6 +6,7 @@ from flask_app.app.utils import set_password, check_password, url_has_allowed_ho
 from flask_app.app.blueprints.auth import bp
 from flask_app.app.blueprints.auth.forms.register_form import RegisterForm
 from flask_app.app.blueprints.auth.forms.login_form import LoginForm
+from flask_app.app.blueprints.auth.login_manager import load_user
 
 @bp.route("/users")
 def list():

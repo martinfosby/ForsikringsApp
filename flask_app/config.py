@@ -21,7 +21,7 @@ class Config:
     SECRET_KEY = secrets.token_urlsafe(16)
     SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    # SQLALCHEMY_BINDS = {
-    # 'meta': 'sqlite:///meta.db',
-    # }
+    SQLALCHEMY_BINDS = {
+    'meta': 'sqlite:///meta.db',
+    }
 
