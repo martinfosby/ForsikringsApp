@@ -9,11 +9,13 @@ def create_app(config_class=Config):
     # extensions init
     from flask_app.app.extensions import db, login_manager
     db.init_app(app)
+    # mdb.init_app(app)
     login_manager.init_app(app)
 
     # app context work
     with app.app_context():
         db.reflect() # get database by reflection
+        # mdb.create_all()
 
     # blueprints
     from flask_app.app.blueprints.main import bp as main_bp

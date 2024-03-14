@@ -18,12 +18,12 @@ def index():
 
 @bp.route('/meta')
 def metausergets():
-    user = User().query.all()
+    user = User.query.all()
     return render_template('base.html', title=user)
 
 @bp.route('/meta/add')
 def metaDbTest():
-    user = User()(username='hellodude', password_hash='fepoklefopk')
+    user = User(username='hellodude', password_hash='fepoklefopk')
     db.session.add(user)
     db.session.commit()
     
