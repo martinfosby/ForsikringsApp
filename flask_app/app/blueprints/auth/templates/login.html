@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     <h2>Login</h2>
     <form method="POST" action="{{ url_for('auth.login') }}">
         {{ form.hidden_tag() }}
@@ -15,19 +12,20 @@
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}
         </p>
-        <input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/>
+        <input
+        type="hidden"
+        name="next"
+        value="{{ request.args.get('next', '') }}"
+        />
         <p>{{ form.submit() }}</p>
     </form>
     {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class=flashes>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-
-
-</body>
-</html>
+        {% if messages %}
+          <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock %}
