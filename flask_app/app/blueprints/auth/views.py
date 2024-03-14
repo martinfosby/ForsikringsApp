@@ -1,19 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, session,flash,url_for
-from flask_login import login_required, login_user, logout_user, current_user, LoginManager
+from flask import abort, render_template, request, redirect, session,flash,url_for
+import flask
+from flask_login import login_required, login_user, logout_user, current_user
 from flask_app.app.extensions import db, login_manager
 from flask_app.app.models import User
-from flask_app.app.utils import set_password, check_password
+from flask_app.app.utils import set_password, check_password, url_has_allowed_host_and_scheme
 from flask_app.app.blueprints.auth import bp
 from flask_app.app.blueprints.auth.forms.register_form import RegisterForm
 from flask_app.app.blueprints.auth.forms.login_form import LoginForm
-
-
-login_manager.login_view = f"{bp.name}.login"
-
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.query(User).get(user_id)
-
 
 @bp.route("/users")
 def list():
@@ -55,15 +48,31 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
+        next = request.form.get('next')
         user = db.session.query(User).filter_by(username=username).first()
         # Check if the user exists and the password is correct
         if user and check_password(user.password_hash, password):
             login_user(user)
-            return redirect(url_for('main.index')) 
+            flash('Logged in successfully.')
+            # url_has_allowed_host_and_scheme should check if the url is safe
+            # for redirects, meaning it matches the request host.
+            # See Django's url_has_allowed_host_and_scheme for an example.
+            # if not url_has_allowed_host_and_scheme(request.host_url, next):
+            #     return abort(400)
+
+            return redirect(next or url_for('main.index'))
         else:
             flash('Invalid username or password')
+            return redirect(url_for(".login"))
+
     return render_template('login.html', form=form)
 
+
+@bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("main.index"))
 
 
 @bp.route("/user/<int:id>")
