@@ -2,7 +2,6 @@ from flask import abort, render_template, request, redirect, session,flash,url_f
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_app.app.extensions import db, login_manager
 from flask_app.app.models import User
-from flask_app.app.utils import set_password, check_password, url_has_allowed_host_and_scheme
 from flask_app.app.blueprints.auth import bp
 from flask_app.app.blueprints.auth.forms.register_form import RegisterForm
 from flask_app.app.blueprints.auth.forms.login_form import LoginForm
@@ -21,12 +20,11 @@ def register():
         # Process form data and create user
         username = form.username.data
         password = form.password.data
-        password_hash = set_password(password) # Generating the password hash
 
         # Creating the new user with the hashed password
         user = User(
             username=username,
-            password_hash=password_hash,
+            password_hash=password,
             is_admin=False
         )
         
@@ -51,7 +49,7 @@ def login():
         next = request.form.get('next')
         user = db.session.query(User).filter_by(username=username).first()
         # Check if the user exists and the password is correct
-        if user and check_password(user.password_hash, password):
+        if user and user.check_password(password):
             login_user(user)
             flash('Logged in successfully.')
             # url_has_allowed_host_and_scheme should check if the url is safe

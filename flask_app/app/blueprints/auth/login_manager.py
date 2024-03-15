@@ -2,7 +2,6 @@ from flask import abort, render_template, request, redirect, session,flash,url_f
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_app.app.extensions import db, login_manager
 from flask_app.app.models import User
-from flask_app.app.utils import set_password, check_password, url_has_allowed_host_and_scheme
 from flask_app.app.blueprints.auth import bp
 
 login_manager.login_view = f"{bp.name}.login"
