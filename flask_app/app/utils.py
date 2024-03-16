@@ -1,11 +1,9 @@
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
-def url_has_allowed_host_and_scheme(host, next):
-    parsed_url = urlparse(host)
-    if parsed_url.scheme in ('http', 'https', '') and parsed_url.path == next:
-        return True
-    else:
-        return False
+def url_has_allowed_host_and_scheme(target, host):
+    ref_url = urlparse(host)
+    parsed_url = urlparse(urljoin(host, target))
+    return parsed_url.scheme in ('http', 'https') and ref_url.netloc == parsed_url.netloc
 
 
 def test_db_connection(db):

@@ -1,6 +1,7 @@
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_app.app.utils import url_has_allowed_host_and_scheme
 from flask_app.app.extensions import db, login_manager
 from flask_app.app.models import User
 from flask_app.app.blueprints.auth import bp
@@ -48,23 +49,23 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        next = request.form.get('next')
         user = db.session.query(User).filter_by(username=username).first()
         # Check if the user exists and the password is correct
         if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            flash('Logged in successfully.')
-            # url_has_allowed_host_and_scheme should check if the url is safe
-            # for redirects, meaning it matches the request host.
-            # See Django's url_has_allowed_host_and_scheme for an example.
-            # if not url_has_allowed_host_and_scheme(request.host_url, next):
-            #     return abort(400)
+            login_user(user, remember=True)
+            flash('Logged in successfully.', category='success')
+
+            # check if next url is safe
+            next = session['next']
+            if not url_has_allowed_host_and_scheme(next, request.host_url):
+                return abort(400)
 
             return redirect(next or url_for('main.index'))
         else:
             flash('Invalid username or password')
             return redirect(url_for(".login"))
 
+    session['next'] = request.args.get('next')
     return render_template('auth/login.html', form=form)
 
 
@@ -72,6 +73,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('Logged out successfully', category='success')
     return redirect(url_for("main.index"))
 
 

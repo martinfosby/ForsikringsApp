@@ -18,9 +18,15 @@ class Config:
     PASSWORD="veldig bra Grupp3"  # Your MySQL password
 
     # App config
+    # NAME = 'Insurance'
     SECRET_KEY = secrets.token_urlsafe(16)
+    # sqlalchemy config
     SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_ECHO = True  # Enable echoing of SQL statements
+    # flask-login config
+    USE_SESSION_FOR_NEXT = True
+
+
 
 

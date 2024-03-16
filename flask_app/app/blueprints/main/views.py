@@ -8,5 +8,5 @@ from flask_app.app.blueprints.auth.login_manager import load_user
 @bp.route('/')
 @login_required
 def index():
-    return render_template('base.html', title=f'Logged in as {current_user.username}')
+    return render_template('main/index.html')
 
