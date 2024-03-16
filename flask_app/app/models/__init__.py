@@ -1,6 +1,5 @@
 from flask_app.app.extensions import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
@@ -8,11 +7,8 @@ class User(db.Model, UserMixin):
 
     def __init__(self, username, password_hash, is_admin=False):
         self.username = username
-        self.password_hash = generate_password_hash(password_hash)
+        self.password_hash = password_hash
         self.is_admin = is_admin
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
 
 
 class InsuranceCompany(db.Model):

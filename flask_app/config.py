@@ -22,6 +22,8 @@ class Config:
     SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_BINDS = {
-    'meta': 'sqlite:///meta.db',
+        'local': 'sqlite:///local.db',
     }
+    SQLALCHEMY_ECHO = True  # Enable echoing of SQL statements
+
 

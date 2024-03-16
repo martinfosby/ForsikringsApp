@@ -1,5 +1,6 @@
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import login_required, login_user, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_app.app.extensions import db, login_manager
 from flask_app.app.models import User
 from flask_app.app.blueprints.auth import bp
@@ -10,7 +11,7 @@ from flask_app.app.blueprints.auth.login_manager import load_user
 @bp.route("/users")
 def list():
     users = db.session.execute(db.select(User).order_by(User.username)).scalars()
-    return render_template("list.html", users=users)
+    return render_template("auth/list.html", users=users)
 
 
 @bp.route("/register", methods=["GET", "POST"])
@@ -21,10 +22,11 @@ def register():
         username = form.username.data
         password = form.password.data
 
+        password_hash = generate_password_hash(password)
         # Creating the new user with the hashed password
         user = User(
             username=username,
-            password_hash=password,
+            password_hash=password_hash,
             is_admin=False
         )
         
@@ -37,7 +39,7 @@ def register():
         return redirect(url_for('main.index')) 
 
     # Render the user creation form for GET requests
-    return render_template("register.html", form=form)
+    return render_template("auth/register.html", form=form)
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -49,7 +51,7 @@ def login():
         next = request.form.get('next')
         user = db.session.query(User).filter_by(username=username).first()
         # Check if the user exists and the password is correct
-        if user and user.check_password(password):
+        if user and check_password_hash(user.password_hash, password):
             login_user(user)
             flash('Logged in successfully.')
             # url_has_allowed_host_and_scheme should check if the url is safe
@@ -63,7 +65,7 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for(".login"))
 
-    return render_template('login.html', form=form)
+    return render_template('auth/login.html', form=form)
 
 
 @bp.route("/logout")
@@ -78,7 +80,7 @@ def logout():
 def detail(id):
     user = db.get_or_404(User, id)
     if current_user == user:
-        return render_template("detail.html", user=user)
+        return render_template("auth/detail.html", user=user)
     else:
         return redirect(url_for(".login"))
 
@@ -93,7 +95,7 @@ def delete(id):
         db.session.commit()
         return redirect(url_for(".user_list"))
 
-    return render_template("delete.html", user=user)
+    return render_template("auth/delete.html", user=user)
 
 
 @bp.route("/user-by-id/<int:id>")

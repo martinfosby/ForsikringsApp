@@ -1,6 +1,6 @@
 import select
 from flask import jsonify, redirect, render_template, request, url_for
-from flask_app.app.blueprints.insurance import bp
+from flask_app.app.blueprints.insurances import bp
 from flask_app.app.extensions import db
 from flask_app.app.models import InsuranceCompany, Insurance
 
