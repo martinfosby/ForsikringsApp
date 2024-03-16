@@ -1,5 +1,5 @@
 from flask import abort, render_template, request, redirect, session,flash,url_for
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_app.app.utils import url_has_allowed_host_and_scheme
 from flask_app.app.extensions import db, login_manager
@@ -7,6 +7,8 @@ from flask_app.app.models import User
 from flask_app.app.blueprints.auth import bp
 from flask_app.app.blueprints.auth.forms.register_form import RegisterForm
 from flask_app.app.blueprints.auth.forms.login_form import LoginForm
+from .forms.change_password_form import ChangePasswordForm
+from .forms.change_username_form import ChangeUsernameForm
 from flask_app.app.blueprints.auth.login_manager import load_user
 
 @bp.route("/users")
@@ -31,11 +33,14 @@ def register():
             is_admin=False
         )
         
-        # Adding and committing the user to the database
-        db.session.add(user)
-        db.session.commit()
-
-        login_user(user)
+        # try adding and committing the user to the database
+        try:
+            db.session.add(user)
+            db.session.commit()
+            login_user(user)
+            flash(f"User {user.username} created", category="success")
+        except Exception as e:
+            flash(f"Could not register user, error: {e}", category="error")
 
         return redirect(url_for('main.index')) 
 
@@ -72,9 +77,13 @@ def login():
 @bp.route("/logout")
 @login_required
 def logout():
-    logout_user()
-    flash('Logged out successfully', category='success')
+    username = current_user.username
+    if logout_user():
+        flash(f'Logged out successfully as {username}', category='success')
+    else:
+        flash(f'Could not log out as {username}', category='error')
     return redirect(url_for("main.index"))
+
 
 
 @bp.route("/user/<int:id>")
@@ -87,17 +96,57 @@ def detail(id):
         return redirect(url_for(".login"))
 
 
-@bp.route("/user/<int:id>/delete", methods=["GET", "POST"])
+@bp.route("/delete", methods=["GET", "POST"])
 @login_required
-def delete(id):
-    user = db.get_or_404(User, id)
-
-    if request.method == "POST":
+def delete():
+    user = current_user
+    try:
         db.session.delete(user)
         db.session.commit()
-        return redirect(url_for(".user_list"))
+        flash(f"Deleted account {user.username}", category='success')
+    except Exception as e:
+        print(e)
+        flash(f"failed to delete account {user.username}", category='danger')
+    return redirect(url_for("main.index"))
 
-    return render_template("auth/delete.html", user=user)
+
+@bp.route("/change/password", methods=['GET', 'POST'])
+@fresh_login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        current_password = form.current_password.data
+        new_password = form.new_password.data
+
+        if check_password_hash(current_user.password_hash, current_password):
+            current_user.password_hash = generate_password_hash(new_password)
+            db.session.commit()  # Commit the changes to the database
+            flash("Password changed successfully", "success")
+            return redirect(url_for("main.index"))
+        else:
+            flash("password given doesn't match current password", "error")
+            return redirect(url_for(".change_password"))
+    return render_template("auth/change_password.html", form=form)
+
+
+@bp.route("/change/username", methods=['GET', 'POST'])
+@fresh_login_required
+def change_username():
+    form = ChangeUsernameForm()
+    if form.validate_on_submit():
+        new_username = form.new_username.data
+
+        try:
+            current_user.username = new_username
+            db.session.commit()  # Commit the changes to the database
+            flash("Username changed successfully", "success")
+        except Exception as e:
+            flash(f"Could not change username because of error: {e}", "error")
+
+        return redirect(url_for("main.index"))
+    return render_template("auth/change_username.html", form=form)
+
+
 
 
 @bp.route("/user-by-id/<int:id>")

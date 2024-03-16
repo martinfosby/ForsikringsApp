@@ -12,6 +12,16 @@
     <body>
         {% block body %}
 
+        <nav>
+            {% block nav %}
+                <div class="actions">
+                    <a href="{{ url_for('main.index') }}">Index</a>
+                    <a href="{{ url_for('auth.register') }}">Register</a>
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                </div>
+            {% endblock %}
+        </nav>
+
         <main>
             <div id="content">
                 {% block content %}

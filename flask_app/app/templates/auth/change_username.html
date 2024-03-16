@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Change password</h2>
+    <form method="POST" action="{{ url_for('.change_username') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.new_username.label }}<br>
+            {{ form.new_username(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
