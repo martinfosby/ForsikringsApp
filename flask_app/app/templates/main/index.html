@@ -8,7 +8,10 @@
         <a href="{{ url_for('auth.change_username') }}">Change username</a><br>
         <a href="{{ url_for('auth.logout') }}">Logout</a><br>
         <a href="{{ url_for('auth.delete') }}">Delete account</a><br>
+        <a href="{{ url_for('insurances.insurances_list') }}">View insurances</a><br>
+        <a href="{{ url_for('insurances.make_insurance') }}">Make new insurance</a><br>
     {% endif %}
+    
 
 {% endblock %}
 

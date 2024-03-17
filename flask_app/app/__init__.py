@@ -7,10 +7,11 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # extensions init
-    from flask_app.app.extensions import db, login_manager, admin
+    from flask_app.app.extensions import db, login_manager, admin, csrf
     db.init_app(app)
     login_manager.init_app(app)
     admin.init_app(app)
+    csrf.init_app(app)
 
     # app context work
     with app.app_context():
@@ -21,7 +22,6 @@ def create_app(config_class=Config):
     from flask_app.app.blueprints.auth import bp as user_bp
     from flask_app.app.blueprints.insurances import bp as insurance_bp
     from flask_app.app.blueprints.management import bp as management_bp
-
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)

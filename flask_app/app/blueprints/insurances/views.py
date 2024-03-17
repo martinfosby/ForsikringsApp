@@ -5,16 +5,15 @@ from flask_app.app.extensions import db
 from flask_app.app.models import InsuranceCompany, Insurance
 
 
+@bp.route('/make/insurance', methods=['GET'])
+def make_insurance():
+    return render_template('insurances/make_insurance.html')
+
 @bp.route('/insurances', methods=['GET'])
-def insurance_list():
+def insurances_list():
     insurances = db.session.execute(db.select(Insurance)).scalars().all()
-    html_response = "<h1>Insurances:</h1>"
-    
-    # Using lambda directly within the loop to format each insurance object
-    for insurance in insurances:
-        html_response += f"<p>{insurance.label}</p><br>"
-    
-    return html_response
+   
+    return render_template('insurances/insurances_list.html', insurances=insurances)
 
 @bp.route('/companies', methods=['GET'])
 def get_insurance_companies():
