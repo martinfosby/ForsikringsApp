@@ -3,7 +3,7 @@ from flask_login import fresh_login_required, login_required, login_user, logout
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_app.app.utils import url_has_allowed_host_and_scheme
 from flask_app.app.extensions import db, login_manager
-from flask_app.app.models import User
+from flask_app.app.models import Customer
 from flask_app.app.blueprints.auth import bp
 from flask_app.app.blueprints.auth.forms.register_form import RegisterForm
 from flask_app.app.blueprints.auth.forms.login_form import LoginForm
@@ -13,7 +13,7 @@ from flask_app.app.blueprints.auth.login_manager import load_user
 
 @bp.route("/users")
 def list():
-    users = db.session.execute(db.select(User).order_by(User.username)).scalars()
+    users = db.session.execute(db.select(Customer).order_by(Customer.username)).scalars()
     return render_template("auth/list.html", users=users)
 
 
@@ -27,7 +27,7 @@ def register():
 
         password_hash = generate_password_hash(password)
         # Creating the new user with the hashed password
-        user = User(
+        user = Customer(
             username=username,
             password_hash=password_hash,
             is_admin=False
@@ -40,7 +40,7 @@ def register():
             login_user(user)
             flash(f"User {user.username} created", category="success")
         except Exception as e:
-            flash(f"Could not register user, error: {e}", category="error")
+            flash(f"Could not register user, error: {e}", category="danger")
 
         return redirect(url_for('main.index')) 
 
@@ -54,7 +54,7 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        user = db.session.query(User).filter_by(username=username).first()
+        user = db.session.query(Customer).filter_by(username=username).first()
         # Check if the user exists and the password is correct
         if user and check_password_hash(user.password_hash, password):
             login_user(user, remember=True)
@@ -67,7 +67,7 @@ def login():
 
             return redirect(next or url_for('main.index'))
         else:
-            flash('Invalid username or password')
+            flash('Invalid username or password', category='danger')
             return redirect(url_for(".login"))
 
     session['next'] = request.args.get('next')
@@ -89,7 +89,7 @@ def logout():
 @bp.route("/user/<int:id>")
 @login_required
 def detail(id):
-    user = db.get_or_404(User, id)
+    user = db.get_or_404(Customer, id)
     if current_user == user:
         return render_template("auth/detail.html", user=user)
     else:
@@ -124,7 +124,7 @@ def change_password():
             flash("Password changed successfully", "success")
             return redirect(url_for("main.index"))
         else:
-            flash("password given doesn't match current password", "error")
+            flash("password given doesn't match current password", "danger")
             return redirect(url_for(".change_password"))
     return render_template("auth/change_password.html", form=form)
 
@@ -141,7 +141,7 @@ def change_username():
             db.session.commit()  # Commit the changes to the database
             flash("Username changed successfully", "success")
         except Exception as e:
-            flash(f"Could not change username because of error: {e}", "error")
+            flash(f"Could not change username because of error: {e}", "danger")
 
         return redirect(url_for("main.index"))
     return render_template("auth/change_username.html", form=form)
@@ -151,13 +151,13 @@ def change_username():
 
 @bp.route("/user-by-id/<int:id>")
 def user_by_id(id):
-    user = db.get_or_404(User, id)
+    user = db.get_or_404(Customer, id)
     return render_template("show_user.html", user=user)
 
 @bp.route("/user-by-username/<username>")
 def user_by_username(username):
     user = db.one_or_404(
-        db.select(User).filter_by(username=username),
+        db.select(Customer).filter_by(username=username),
         description=f"No user named '{username}'."
     )
     return render_template("show_user.html", user=user)

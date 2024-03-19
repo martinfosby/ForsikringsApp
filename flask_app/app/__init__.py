@@ -1,8 +1,21 @@
 from flask import Flask
-from flask_app.config import Config
+from flask_app.config import ProductionConfig, DevelopmentConfig, TestingConfig
+from flask_app.app import models
+import logging
+from logging.handlers import RotatingFileHandler
+
+logger = logging.getLogger(__name__)
+console_handler = logging.StreamHandler()
+file_handler = RotatingFileHandler("app.log")
+formatter = logging.Formatter("%(asctime)s-%(levelname)s-%(message)s")
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
 
 
-def create_app(config_class=Config):
+def create_app(config_class=DevelopmentConfig):
     app = Flask (__name__)
     app.config.from_object(config_class)
 
@@ -13,9 +26,19 @@ def create_app(config_class=Config):
     admin.init_app(app)
     csrf.init_app(app)
 
-    # app context work
+   # app context work
     with app.app_context():
-        db.reflect(bind_key=None) # get default database by reflection
+        try:
+            # Create all tables
+            db.create_all()
+            logger.info("Database created successfully.")
+        except Exception as e:
+            # If reflection fails, it means the database doesn't exist
+            logger.critical("Database creation failed. Attempting to reflect database.", exc_info=True)
+            # Try to reflect the database schema
+            db.reflect()
+            logger.info("Database reflection successful.")
+
 
     # blueprints
     from flask_app.app.blueprints.main import bp as main_bp

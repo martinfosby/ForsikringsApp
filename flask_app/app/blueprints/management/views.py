@@ -2,7 +2,7 @@ from . import bp, admin
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from flask_app.app.extensions import db
-from flask_app.app.models import User
+from flask_app.app.models import Customer
 from flask_app.app.blueprints.auth.login_manager import load_user
 
 
@@ -12,7 +12,7 @@ from flask_app.app.blueprints.auth.login_manager import load_user
 @login_required
 def delete_user(id):
     if current_user.is_admin:
-        user_to_be_deleted = db.get_or_404(User, id)
+        user_to_be_deleted = db.get_or_404(Customer, id)
         db.session.delete(user_to_be_deleted)
         db.session.commit()
         flash(f"Successfully deleted user {user_to_be_deleted}", "info")

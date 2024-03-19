@@ -2,7 +2,7 @@ import select
 from flask import jsonify, redirect, render_template, request, url_for
 from flask_app.app.blueprints.insurances import bp
 from flask_app.app.extensions import db
-from flask_app.app.models import InsuranceCompany, Insurance
+from flask_app.app.models import Company, Insurance
 
 
 @bp.route('/make/insurance', methods=['GET'])
@@ -17,7 +17,7 @@ def insurances_list():
 
 @bp.route('/companies', methods=['GET'])
 def get_insurance_companies():
-    companies = InsuranceCompany.query.all()
+    companies = Company.query.all()
     company_names = [company.name for company in companies]
     return jsonify(company_names)
 
@@ -27,7 +27,7 @@ def add_insurance_company():
     if not data:
         return jsonify({'error': 'No data provided'}), 400
     
-    new_company = InsuranceCompany(name=data['name'], other_field=data['other_field'])
+    new_company = Company(name=data['name'], other_field=data['other_field'])
     db.session.add(new_company)
     db.session.commit()
 

@@ -7,13 +7,10 @@ load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-   
-
     # Unit testing
     TESTING = False
-
     # App config
-    # NAME = 'Insurance'
+    # NAME = 'app'
     SECRET_KEY = secrets.token_urlsafe(16)
     # sqlalchemy config
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -41,12 +38,14 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
+    """Uses development database server."""
     DB_SERVER = 'localhost'
-    DATABASE_URI = 'sqlite:///:sandbox:'
-    SQLALCHEMY_DATABASE_URI = DATABASE_URI
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///sandbox.db'
+
 
 
 class TestingConfig(Config):
+    """Uses in-memory database server."""
     DB_SERVER = 'localhost'
-    DATABASE_URI = 'sqlite:///:memory:'
-    SQLALCHEMY_DATABASE_URI = DATABASE_URI
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///memory.db'
+    TESTING = True
