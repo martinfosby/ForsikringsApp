@@ -15,7 +15,7 @@
                 <nav class="navbar navbar-expand-lg bg-body-tertiary">
                     {% block nav %}
                         <div class="container-fluid">
-                            <a class="navbar-brand" href="#">Bodovision</a>
+                            <a class="navbar-brand" href="{{ url_for('main.home') }}">Bodovision</a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
@@ -76,13 +76,13 @@
                                     <div class="alert alert-{{ category }} alert-dismissible fade show d-flex align-items-center" role="alert">
                                         <!-- Add SVG icon based on the category -->
                                         {% if category == 'info' %}
-                                            <i class="bi bi-info-circle-fill"></i>
+                                            <i class="bi bi-info-circle-fill me-2"></i>
                                         {% elif category == 'success' %}
-                                            <i class="bi bi-check-circle-fill"></i>
+                                            <i class="bi bi-check-circle-fill me-2"></i>
                                         {% elif category == 'warning' %}
-                                            <i class="bi bi-exclamation-circle-fill"></i>
+                                            <i class="bi bi-exclamation-circle-fill me-2"></i>
                                         {% else %}
-                                            <i class="bi bi-x-circle-fill"></i> 
+                                            <i class="bi bi-x-circle-fill me-2"></i> 
                                         {% endif %}
                                         {{ message }}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
