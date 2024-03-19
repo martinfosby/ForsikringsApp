@@ -54,10 +54,11 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
+        remember_me = form.remember_me.data
         user = db.session.query(Customer).filter_by(username=username).first()
         # Check if the user exists and the password is correct
         if user and check_password_hash(user.password_hash, password):
-            login_user(user, remember=True)
+            login_user(user, remember=remember_me)
             flash('Logged in successfully.', category='success')
 
             # check if next url is safe
