@@ -1,12 +1,17 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-logger = logging.getLogger(__name__)
-console_handler = logging.StreamHandler()
-file_handler = RotatingFileHandler("app.log")
+logger = logging.getLogger()
+
 formatter = logging.Formatter("%(asctime)s-%(levelname)s-%(message)s")
+
+# console handler
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
+
+# file handler
+file_handler = RotatingFileHandler("app.log")
+file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)

@@ -1,4 +1,4 @@
-from flask import abort, render_template, request, redirect, session,flash,url_for
+from flask import abort, render_template, request, redirect, session, flash,url_for, current_app
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils import url_has_allowed_host_and_scheme
@@ -11,7 +11,6 @@ from .forms.change_password_form import ChangePasswordForm
 from .forms.change_username_form import ChangeUsernameForm
 from app.blueprints.auth.login_manager import load_user
 
-from log_handler import logger
 
 @bp.route("/users")
 def list():
@@ -108,7 +107,7 @@ def delete():
         db.session.commit()
         flash(f"Deleted account {user.username}", category='success')
     except Exception as e:
-        logger.debug("Failed to delete account %s", user, exc_info=True)
+        current_app.logger.debug("Failed to delete account %s", user, exc_info=True)
         flash(f"failed to delete account {user.username}", category='danger')
     return redirect(url_for("main.index"))
 
@@ -144,7 +143,7 @@ def change_username():
             db.session.commit()  # Commit the changes to the database
             flash("Username changed successfully", "success")
         except Exception as e:
-            logger.debug("Failed to change username %s", new_username, exc_info=True)
+            current_app.logger.debug("Failed to change username %s", new_username, exc_info=True)
             flash(f"Could not change username because of error: {e}", "danger")
 
         return redirect(url_for("main.index"))

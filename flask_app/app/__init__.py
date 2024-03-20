@@ -20,13 +20,13 @@ def create_app(config_class=ProductionConfig):
         try:
             # Create all tables
             db.create_all()
-            logger.info("Database created successfully.")
+            app.logger.info("Database created successfully.")
         except Exception as e:
             # If reflection fails, it means the database doesn't exist
-            logger.critical("Database creation failed. Attempting to reflect database.", exc_info=True)
+            app.logger.critical("Database creation failed. Attempting to reflect database.", exc_info=True)
             # Try to reflect the database schema
             db.reflect()
-            logger.info("Database reflection successful.")
+            app.logger.info("Database reflection successful.")
 
 
     # blueprints
