@@ -15,7 +15,7 @@ console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
 
-def create_app(config_class=DevelopmentConfig):
+def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
     app.config.from_object(config_class)
 
