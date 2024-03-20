@@ -62,6 +62,7 @@ class Offer(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship(f'{mn}.Category', back_populates='offer')
 
+
 class Settlement(db.Model):
     __tablename__ = "settlement"
     id = db.Column(db.Integer, primary_key=True)
