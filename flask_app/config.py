@@ -18,10 +18,6 @@ class Config:
     # flask-login config
     USE_SESSION_FOR_NEXT = True
 
-    # Logging config
-    LOG_FILE = 'app.log'
-    LOG_LEVEL = 'INFO'
-
 
 class ProductionConfig(Config):
     """Uses production database server."""
@@ -41,7 +37,6 @@ class DevelopmentConfig(Config):
     """Uses development database server."""
     DB_SERVER = 'localhost'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///sandbox.db'
-
 
 
 class TestingConfig(Config):

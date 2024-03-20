@@ -1,4 +1,3 @@
-from venv import logger
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,6 +10,8 @@ from app.blueprints.auth.forms.login_form import LoginForm
 from .forms.change_password_form import ChangePasswordForm
 from .forms.change_username_form import ChangeUsernameForm
 from app.blueprints.auth.login_manager import load_user
+
+from log_handler import logger
 
 @bp.route("/users")
 def list():
