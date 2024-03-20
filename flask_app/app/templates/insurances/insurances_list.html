@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Insurances</h1>
+    <ul>
+        {% for insurance in insurances %}
+            <li>{{ insurance.label }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

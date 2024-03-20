@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Make Insurance</h1>
+    <form method="POST" action="{{ url_for('insurances.make_insurance') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.label.label }}<br>
+            {{ form.label(size=32) }}
+        </p>
+        <p>
+            {{ form.price.label }}<br>
+            {{ form.price(size=32) }}
+        </p>
+        <p>
+            {{ form.company.label }}<br>
+            {{ form.company(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

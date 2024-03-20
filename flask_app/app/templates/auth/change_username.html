@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Change Username{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Change Username</h2>
+        <form method="POST" action="{{ url_for('.change_username') }}" class="mt-4">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.new_username.label(class="form-label") }}
+                {{ form.new_username(class="form-control", id="new_username") }}
+            </div>
+            <div class="mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
