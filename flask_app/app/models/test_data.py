@@ -1,4 +1,4 @@
-from flask_app.app.extensions import db
+from app.extensions import db
 from models import Company, Contact, Insurance, Settlement
 
 # Company test data

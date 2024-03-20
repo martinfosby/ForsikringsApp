@@ -1,4 +1,4 @@
-from flask_app.app.extensions import db
+from app.extensions import db
 from flask_login import UserMixin
 
 mn = __name__ # module name

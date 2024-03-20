@@ -1,8 +1,8 @@
 import select
 from flask import jsonify, redirect, render_template, request, url_for
-from flask_app.app.blueprints.insurances import bp
-from flask_app.app.extensions import db
-from flask_app.app.models import Company, Insurance
+from app.blueprints.insurances import bp
+from app.extensions import db
+from app.models import Company, Insurance
 
 
 @bp.route('/make/insurance', methods=['GET'])

@@ -1,8 +1,8 @@
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import login_required, login_user, logout_user, current_user
-from flask_app.app.extensions import db, login_manager
-from flask_app.app.models import Customer
-from flask_app.app.blueprints.auth import bp
+from app.extensions import db, login_manager
+from app.models import Customer
+from app.blueprints.auth import bp
 
 login_manager.login_view = f"{bp.name}.login"
 login_manager.refresh_view = f"{bp.name}.login"

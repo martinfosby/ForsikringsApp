@@ -1,6 +1,6 @@
 from flask import Flask
-from flask_app.config import ProductionConfig, DevelopmentConfig, TestingConfig
-from flask_app.app import models
+from config import ProductionConfig, DevelopmentConfig, TestingConfig
+from app import models
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -20,7 +20,7 @@ def create_app(config_class=ProductionConfig):
     app.config.from_object(config_class)
 
     # extensions init
-    from flask_app.app.extensions import db, login_manager, admin, csrf
+    from app.extensions import db, login_manager, admin, csrf
     db.init_app(app)
     login_manager.init_app(app)
     admin.init_app(app)
@@ -41,10 +41,10 @@ def create_app(config_class=ProductionConfig):
 
 
     # blueprints
-    from flask_app.app.blueprints.main import bp as main_bp
-    from flask_app.app.blueprints.auth import bp as user_bp
-    from flask_app.app.blueprints.insurances import bp as insurance_bp
-    from flask_app.app.blueprints.management import bp as management_bp
+    from app.blueprints.main import bp as main_bp
+    from app.blueprints.auth import bp as user_bp
+    from app.blueprints.insurances import bp as insurance_bp
+    from app.blueprints.management import bp as management_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)

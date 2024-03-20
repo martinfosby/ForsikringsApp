@@ -1,6 +1,6 @@
-from flask_app.app.extensions import admin, db
+from app.extensions import admin, db
 from flask_admin.contrib.sqla import ModelView
-from flask_app.app.models import *
+from app.models import *
 from flask.blueprints import Blueprint
 
 

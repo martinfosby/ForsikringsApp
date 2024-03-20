@@ -1,9 +1,9 @@
 from . import bp, admin
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
-from flask_app.app.extensions import db
-from flask_app.app.models import Customer
-from flask_app.app.blueprints.auth.login_manager import load_user
+from app.extensions import db
+from app.models import Customer
+from app.blueprints.auth.login_manager import load_user
 
 
 

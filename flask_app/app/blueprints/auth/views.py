@@ -2,15 +2,15 @@ from venv import logger
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_app.app.utils import url_has_allowed_host_and_scheme
-from flask_app.app.extensions import db, login_manager
-from flask_app.app.models import Customer
-from flask_app.app.blueprints.auth import bp
-from flask_app.app.blueprints.auth.forms.register_form import RegisterForm
-from flask_app.app.blueprints.auth.forms.login_form import LoginForm
+from app.utils import url_has_allowed_host_and_scheme
+from app.extensions import db, login_manager
+from app.models import Customer
+from app.blueprints.auth import bp
+from app.blueprints.auth.forms.register_form import RegisterForm
+from app.blueprints.auth.forms.login_form import LoginForm
 from .forms.change_password_form import ChangePasswordForm
 from .forms.change_username_form import ChangeUsernameForm
-from flask_app.app.blueprints.auth.login_manager import load_user
+from app.blueprints.auth.login_manager import load_user
 
 @bp.route("/users")
 def list():
