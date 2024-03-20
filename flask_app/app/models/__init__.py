@@ -47,7 +47,7 @@ class Insurance(db.Model):
     price = db.Column(db.Integer)
     due_date = db.Column(db.Date)
     unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
     unit_type = db.relationship(f'{mn}.UnitType', back_populates='insurance')
     customer = db.relationship(f'{mn}.Customer', back_populates='insurance')
