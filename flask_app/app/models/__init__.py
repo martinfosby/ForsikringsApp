@@ -31,12 +31,12 @@ class Contact(db.Model):
     company = db.relationship(f'{mn}.Company', back_populates='contact')
 
 
-class Category(db.Model):
-    __tablename__ = "category"
+class UnitType(db.Model):
+    __tablename__ = "unit_type"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
-    insurance = db.relationship(f'{mn}.Insurance', back_populates='category')
-    offer = db.relationship(f'{mn}.Offer', back_populates='category')
+    insurance = db.relationship(f'{mn}.Insurance', back_populates='unit_type')
+    offer = db.relationship(f'{mn}.Offer', back_populates='unit_type')
 
 
 class Insurance(db.Model):
@@ -46,10 +46,10 @@ class Insurance(db.Model):
     value = db.Column(db.Integer)
     price = db.Column(db.Integer)
     due_date = db.Column(db.Date)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
-    category = db.relationship(f'{mn}.Category', back_populates='insurance')
+    unit_type = db.relationship(f'{mn}.UnitType', back_populates='insurance')
     customer = db.relationship(f'{mn}.Customer', back_populates='insurance')
     company = db.relationship(f'{mn}.Company', back_populates='insurance')
 
@@ -59,8 +59,8 @@ class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(90))
     price = db.Column(db.Integer)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    category = db.relationship(f'{mn}.Category', back_populates='offer')
+    unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
+    unit_type = db.relationship(f'{mn}.UnitType', back_populates='offer')
 
 
 class Settlement(db.Model):
@@ -68,4 +68,4 @@ class Settlement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(300))
     sum = db.Column(db.String(45))
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
