@@ -45,7 +45,7 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    """Uses in-memory database server."""
+    """Uses in-memory database server for unit testing."""
     DB_SERVER = 'localhost'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///memory.db'
     TESTING = True
