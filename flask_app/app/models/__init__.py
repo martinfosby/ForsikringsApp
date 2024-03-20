@@ -1,8 +1,6 @@
 from app.extensions import db
 from flask_login import UserMixin
 
-mn = __name__ # module name
-
 
 class Customer(db.Model, UserMixin):
     __tablename__ = "customer"
@@ -10,15 +8,15 @@ class Customer(db.Model, UserMixin):
     username = db.Column(db.String(45), unique=True)
     password_hash = db.Column(db.String(512))
     is_admin = db.Column(db.Boolean)
-    insurance = db.relationship(f'{mn}.Insurance', back_populates='customer')
+    insurance = db.relationship(f'Insurance', back_populates='customer')
 
 
 class Company(db.Model):
     __tablename__ = "company"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
-    contact = db.relationship(f'{mn}.Contact', back_populates='company')
-    insurance = db.relationship(f'{mn}.Insurance', back_populates='company')
+    contact = db.relationship(f'Contact', back_populates='company')
+    insurance = db.relationship(f'Insurance', back_populates='company')
 
 
 class Contact(db.Model):
@@ -28,15 +26,15 @@ class Contact(db.Model):
     phone_number = db.Column(db.String(30))
     email = db.Column(db.String(90))
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
-    company = db.relationship(f'{mn}.Company', back_populates='contact')
+    company = db.relationship(f'Company', back_populates='contact')
 
 
 class UnitType(db.Model):
     __tablename__ = "unit_type"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
-    insurance = db.relationship(f'{mn}.Insurance', back_populates='unit_type')
-    offer = db.relationship(f'{mn}.Offer', back_populates='unit_type')
+    insurance = db.relationship(f'Insurance', back_populates='unit_type')
+    offer = db.relationship(f'Offer', back_populates='unit_type')
 
 
 class Insurance(db.Model):
@@ -49,9 +47,9 @@ class Insurance(db.Model):
     unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
-    unit_type = db.relationship(f'{mn}.UnitType', back_populates='insurance')
-    customer = db.relationship(f'{mn}.Customer', back_populates='insurance')
-    company = db.relationship(f'{mn}.Company', back_populates='insurance')
+    unit_type = db.relationship(f'UnitType', back_populates='insurance')
+    customer = db.relationship(f'Customer', back_populates='insurance')
+    company = db.relationship(f'Company', back_populates='insurance')
 
 
 class Offer(db.Model):
@@ -60,7 +58,7 @@ class Offer(db.Model):
     label = db.Column(db.String(90))
     price = db.Column(db.Integer)
     unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
-    unit_type = db.relationship(f'{mn}.UnitType', back_populates='offer')
+    unit_type = db.relationship(f'UnitType', back_populates='offer')
 
 
 class Settlement(db.Model):
