@@ -60,6 +60,7 @@ def login():
         # Check if the user exists and the password is correct
         if user and check_password_hash(user.password_hash, password):
             login_user(user, remember=remember_me)
+            current_app.logger.info(f"User {username} logged in")
             flash('Logged in successfully.', category='success')
 
             # check if next url is safe
@@ -69,6 +70,7 @@ def login():
 
             return redirect(next or url_for('main.index'))
         else:
+            current_app.logger.info('Invalid username or password')
             flash('Invalid username or password', category='danger')
             return redirect(url_for(".login"))
 
@@ -81,8 +83,10 @@ def login():
 def logout():
     username = current_user.username
     if logout_user():
+        current_app.logger.info(f"User {username} logged out")
         flash(f'Logged out successfully as {username}', category='success')
     else:
+        current_app.logger.info(f"User {username} failed to log out")
         flash(f'Could not log out as {username}', category='danger')
     return redirect(url_for("main.index"))
 
@@ -107,7 +111,7 @@ def delete():
         db.session.commit()
         flash(f"Deleted account {user.username}", category='success')
     except Exception as e:
-        current_app.logger.debug("Failed to delete account %s", user, exc_info=True)
+        current_app.logger.debug(f"Failed to delete account {user.username}", exc_info=True)
         flash(f"failed to delete account {user.username}", category='danger')
     return redirect(url_for("main.index"))
 

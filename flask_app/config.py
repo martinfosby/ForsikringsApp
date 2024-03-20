@@ -10,7 +10,6 @@ class Config:
     # Unit testing
     TESTING = False
     # App config
-    # NAME = 'app'
     SECRET_KEY = secrets.token_urlsafe(16)
     # sqlalchemy config
     SQLALCHEMY_TRACK_MODIFICATIONS = True
