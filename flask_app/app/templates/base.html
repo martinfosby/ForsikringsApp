@@ -61,10 +61,12 @@
 
                 <main>
                     {% block main %}
-                        <div id="content">
-                            {% block content %}
-                            {% endblock %}
-                        </div>
+                        {% autoescape true %}
+                            <div id="content">
+                                {% block content %}
+                                {% endblock %}
+                            </div>
+                        {% endautoescape %}
                     {% endblock %}
                 </main>
 
