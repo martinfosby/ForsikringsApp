@@ -1,4 +1,6 @@
 from flask import current_app, render_template, render_template_string, request
+
+from app.models import Customer
 from . import bp
 from app.extensions import db
 from sqlalchemy import select
@@ -25,6 +27,13 @@ def test_xss():
     return render_template('testing/test_xss.html')
 
 
-@bp.route('/test/sql_injection')
+@bp.route('/test/sql/injection')
 def test_sql_injection():
-    pass
+    customer = Customer(username='drop table customer', password_hash='test')
+
+    try:
+        db.session.add(customer)
+        db.session.commit()
+        return 'SQL injection test successful!'
+    except Exception as e:
+        return f'SQL injection test failed: {str(e)}'
