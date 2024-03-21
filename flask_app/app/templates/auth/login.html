@@ -9,11 +9,11 @@
             {{ form.hidden_tag() }}
             <div class="mb-3">
                 {{ form.username.label(class="form-label") }}
-                {{ form.username(class="form-control", id="username") | escape }}
+                {{ form.username(class="form-control", id="username") }}
             </div>
             <div class="mb-3">
                 {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control", id="password") | escape }}
+                {{ form.password(class="form-control", id="password") }}
             </div>
             <div class="mb-3">
                 {{ form.remember_me(class="form-check-input")}}

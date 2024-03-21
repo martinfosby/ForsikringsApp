@@ -1,4 +1,7 @@
 from urllib.parse import urljoin, urlparse
+import secrets
+from flask import session
+
 
 def url_has_allowed_host_and_scheme(target, host):
     ref_url = urlparse(host)
@@ -16,3 +19,8 @@ def test_db_connection(db):
         # If connection fails, print the error
         print("Connection failed:", e)
 
+
+def generate_csrf_token():
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)
+    return session['csrf_token']

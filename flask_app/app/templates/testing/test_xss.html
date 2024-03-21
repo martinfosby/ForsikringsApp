@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}XSS Test{% endblock %}
+
+{% block content %}
+    <h1>XSS Test</h1>
+    <form method="POST" action="{{ url_for('.test_xss') }}">
+        <input type="text" name="xss_input">
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
