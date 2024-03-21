@@ -30,3 +30,4 @@ if __name__ == "__main__":
         # Iterate over the result and print each row
         for row in rows:
             print(row)
+

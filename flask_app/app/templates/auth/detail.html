@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>User Detail</h1>
+    <div>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }} </p> <!-- Assuming you might want to show the email -->
+        <p><strong>Password Hash:</strong> {{ user.password_hash }}</p> <!-- Reminder: Exposing password hashes in UI is not recommended -->
+        <p><strong>Admin:</strong> {{ user.is_admin }}</p>
+        <!-- Add more user details as needed -->
+    </div>
+{% endblock %}

@@ -9,16 +9,16 @@
             "type": "debugpy",
             "request": "launch",
             "module": "flask",
+            "cwd": "${workspaceFolder}/flask_app",
             "env": {
-                "FLASK_APP": "app.py",
+                "FLASK_APP": "app",
                 "FLASK_DEBUG": "1"
             },
             "args": [
                 "run",
-                "--no-debugger",
-                "--no-reload"
             ],
-            "jinja": true
+            "jinja": true,
+            "autoStartBrowser": false
         }
     ]
 }
