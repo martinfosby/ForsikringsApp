@@ -4,7 +4,7 @@ from app import models
 from log_handler import logger
 
 
-def create_app(config_class=DevelopmentConfig):
+def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
     app.config.from_object(config_class)
 
@@ -34,13 +34,9 @@ def create_app(config_class=DevelopmentConfig):
     from app.blueprints.auth import bp as user_bp
     from app.blueprints.insurances import bp as insurance_bp
     from app.blueprints.management import bp as management_bp
-    from app.blueprints.testing import bp as testing_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)
     app.register_blueprint(management_bp)
-    app.register_blueprint(testing_bp)
-
-    csrf.exempt(testing_bp)
 
     return app
