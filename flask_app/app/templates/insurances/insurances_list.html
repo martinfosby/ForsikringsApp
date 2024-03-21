@@ -2,9 +2,24 @@
 
 {% block content %}
     <h1>Insurances</h1>
-    <ul>
+    <table class = "table"> <!--ikke slett-->
+        <tr>
+            <th style="font-size: 18px;">Name</th>
+            <th style="font-size: 18px;">Value(kr)</th> 
+            <th style="font-size: 18px;">Price(kr)</th> 
+            <th style="font-size: 18px;">Due date</th> 
+            <th style="font-size: 18px;">Company</th> 
+        </tr>
+
         {% for insurance in insurances %}
-            <li>{{ insurance.label }}</li>
+            <tr>
+                <td>{{ insurance.label }}</td>
+                <td>{{ insurance.value }}</td>
+                <td>{{ insurance.price }}</td>
+                <td>{{ insurance.due_date }}</td>
+                <td>{{ insurance.company.name }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
+
 {% endblock %}
