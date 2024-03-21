@@ -18,7 +18,7 @@
                 "run",
             ],
             "jinja": true,
-            "autoStartBrowser": false
+            "autoStartBrowser": true
         }
     ]
 }
