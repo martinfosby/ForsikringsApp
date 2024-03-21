@@ -5,8 +5,8 @@
     <table class = "table"> <!--ikke slett-->
         <tr>
             <th style="font-size: 18px;">Name</th>
-            <th style="font-size: 18px;">Value</th> 
-            <th style="font-size: 18px;">Price</th> 
+            <th style="font-size: 18px;">Value(kr)</th> 
+            <th style="font-size: 18px;">Price(kr)</th> 
             <th style="font-size: 18px;">Due date</th> 
             <th style="font-size: 18px;">Company</th> 
         </tr>
@@ -17,7 +17,7 @@
                 <td>{{ insurance.value }}</td>
                 <td>{{ insurance.price }}</td>
                 <td>{{ insurance.due_date }}</td>
-                <td>{{ insurance.company_id }}</td> <!--endre denne slik at den viser navnet til selskapet, og ikke id-->
+                <td>{{ insurance.company.name }}</td>
             </tr>
         {% endfor %}
     </table>
