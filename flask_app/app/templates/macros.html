@@ -14,7 +14,7 @@
 
 
 {% macro render_form(title, form_action_url, form, modifier='') %}
-    <div class="container {{ modifier }}">
+    <div class="container col-md-6 offset-md-3 mt-5 mb-5 {{ modifier }}">
         <h2>{{ title }}</h2>
         <form method="POST" action="{{ form_action_url }}" class="mt-4">
             {{ form.hidden_tag() }}
