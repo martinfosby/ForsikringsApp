@@ -2,16 +2,14 @@
 
 {% block title %}Change Username{% endblock %}
 
-{% from "macros.html" import render_field, render_button_field %}
-
+{% from "macros.html" import render_page_content %}
 
 {% block content %}
-    <div class="container">
-        <h2>Change Username</h2>
-        <form method="POST" action="{{ url_for('.change_username') }}" class="mt-4">
-            {{ form.hidden_tag() }}
-            {{ render_field(form.new_username) }}
-            {{ render_button_field(form.submit) }}
-        </form>
-    </div>
+    {{
+        render_page_content(
+            title='Change Username', 
+            form_action_url=url_for('.change_username'), 
+            form=form
+        )
+    }}
 {% endblock %}

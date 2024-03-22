@@ -25,19 +25,20 @@
         <h2>{{ title }}</h2>
         <form method="POST" action="{{ form_action_url }}" class="mt-4">
             {{ form.hidden_tag() }}
-            {% for field in form %}
+            {% for field in form if field.type != 'CSRFTokenField' %}
                 {% if field.type == 'BooleanField' %}
-                    {# Render boolean field differently #}
                     {{ render_boolean_field(field) }}
+                {% elif field.type == 'SubmitField' %}
+                    {{ render_button_field(field) }}
                 {% else %}
-                    {# Render other fields using render_field macro #}
                     {{ render_field(field) }}
                 {% endif %}
             {% endfor %}
-            {{ render_button_field(form.submit) }}
+            {{ additional_content }}
         </form>
     </div>
 {% endmacro %}
+
 
 
 {% macro render_flashed_messages() %}
