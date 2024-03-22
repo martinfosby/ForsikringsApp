@@ -21,7 +21,7 @@
 {% endmacro %}
 
 
-{% macro render_page_content(title, form_action_url, form, modifier='') %}
+{% macro render_form(title, form_action_url, form, modifier='') %}
     <div class="container {{ modifier }}">
         <h2>{{ title }}</h2>
         <form method="POST" action="{{ form_action_url }}" class="mt-4">

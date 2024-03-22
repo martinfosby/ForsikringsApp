@@ -2,11 +2,11 @@
 
 {% block title %}Change Username{% endblock %}
 
-{% from "macros.html" import render_page_content %}
+{% from "macros.html" import render_form %}
 
 {% block content %}
     {{
-        render_page_content(
+        render_form(
             title='Change Username', 
             form_action_url=url_for('.change_username'), 
             form=form
