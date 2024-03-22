@@ -8,7 +8,7 @@
 
 {% macro render_boolean_field(field) %}
     <div class="mb-3">
-        {{ field(class="form-check-input")}}
+        {{ field(class="form-check-input") }}
         {{ field.label(class="form-check-label") }}
     </div>
 {% endmacro %}
@@ -18,4 +18,30 @@
     <div class="mb-3">
         {{ field(class="btn btn-primary") }}
     </div>
+{% endmacro %}
+
+
+{% macro render_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flashes m-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show d-flex align-items-center" role="alert">
+                        <!-- Add SVG icon based on the category -->
+                        {% if category == 'info' %}
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                        {% elif category == 'success' %}
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                        {% elif category == 'warning' %}
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        {% else %}
+                            <i class="bi bi-x-circle-fill me-2"></i> 
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 {% endmacro %}

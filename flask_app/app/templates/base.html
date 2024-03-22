@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <!-- flask_app\app\templates\base.html -->
         {% block head %}
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -69,28 +70,8 @@
                 </main>
 
                 {% block flashes %}
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            <div class="flashes m-4">
-                                {% for category, message in messages %}
-                                    <div class="alert alert-{{ category }} alert-dismissible fade show d-flex align-items-center" role="alert">
-                                        <!-- Add SVG icon based on the category -->
-                                        {% if category == 'info' %}
-                                            <i class="bi bi-info-circle-fill me-2"></i>
-                                        {% elif category == 'success' %}
-                                            <i class="bi bi-check-circle-fill me-2"></i>
-                                        {% elif category == 'warning' %}
-                                            <i class="bi bi-exclamation-circle-fill me-2"></i>
-                                        {% else %}
-                                            <i class="bi bi-x-circle-fill me-2"></i> 
-                                        {% endif %}
-                                        {{ message }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endwith %}
+                    {% from "macros.html" import render_flashed_messages %}
+                    {{ render_flashed_messages() }}
                 {% endblock flashes %}
 
                 
