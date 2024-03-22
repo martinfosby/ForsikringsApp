@@ -1,20 +1,20 @@
-{% macro render_field(field, modifier='') %}
-    <div class="mb-3">
+{% macro render_field(field, class='') %}
+    <div class="mb-3 {{ class }}">
         {% if field.type == 'BooleanField' %}
-            {{ field(class="form-check-input " ~ modifier) }}
-            {{ field.label(class="form-check-label " ~ modifier) }}
+            {{ field(class="form-check-input ") }}
+            {{ field.label(class="form-check-label ") }}
         {% elif field.type == 'SubmitField' %}
-            {{ field(class="btn btn-primary " ~ modifier) }}
+            {{ field(class="btn btn-primary ") }}
         {% else %}
-            {{ field.label(class="form-label " ~ modifier) }}
-            {{ field(class="form-control " ~ modifier, id=field.id, size=45) }}
+            {{ field.label(class="form-label ") }}
+            {{ field(class="form-control ", id=field.id, size=45) }}
         {% endif %}
     </div>
 {% endmacro %}
 
 
-{% macro render_form(title, form_action_url, form, modifier='') %}
-    <div class="container col-md-6 offset-md-3 mt-5 mb-5 {{ modifier }}">
+{% macro render_form(title, form_action_url, form, class='') %}
+    <div class="container col-md-6 offset-md-3 mt-5 mb-5 {{ class }}">
         <h2>{{ title }}</h2>
         <form method="POST" action="{{ form_action_url }}" class="mt-4">
             {{ form.hidden_tag() }}
@@ -26,10 +26,10 @@
 {% endmacro %}
 
 
-{% macro render_flashed_messages() %}
+{% macro render_flashed_messages(class='') %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flashes m-4">
+            <div class="flashes m-4 {{ class }}">
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show d-flex align-items-center" role="alert">
                         <!-- Add SVG icon based on the category -->
