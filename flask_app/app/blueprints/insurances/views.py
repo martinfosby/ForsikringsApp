@@ -3,25 +3,31 @@ from flask import jsonify, redirect, render_template, request, url_for
 from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance
+from flask_login import current_user, login_required
 
 
 @bp.route('/make/insurance', methods=['GET'])
+@login_required
 def make_insurance():
     return render_template('insurances/make_insurance.html')
 
 @bp.route('/insurances', methods=['GET'])
+@login_required
 def insurances_list():
-    insurances = db.session.execute(db.select(Insurance)).scalars().all()
+    insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
+    print(current_user)
    
-    return render_template('insurances/insurances_list.html', insurances=insurances)
+    return render_template('insurances/insurances_list.html', insurances=insurances, user=current_user)
 
 @bp.route('/companies', methods=['GET'])
+@login_required
 def get_insurance_companies():
     companies = Company.query.all()
     company_names = [company.name for company in companies]
     return jsonify(company_names)
 
 @bp.route('/company/add', methods=['POST'])
+@login_required
 def add_insurance_company():
     data = request.json
     if not data:
