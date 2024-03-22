@@ -2,23 +2,16 @@
 
 {% block title %}Register{% endblock %}
 
+{% from "macros.html" import render_field, render_button_field %}
 
 {% block content %}
     <div class="container">
         <h2>Register</h2>
         <form method="POST" action="{{ url_for('.register') }}" class="mt-4">
             {{ form.hidden_tag() }}
-            <div class="mb-3">
-                {{ form.username.label(class="form-label") }}<br>
-                {{ form.username(class="form-control", size=32) }}
-            </div>
-            <div class="mb-3">
-                {{ form.password.label(class="form-label") }}<br>
-                {{ form.password(class="form-control", size=32) }}
-            </div>
-            <div class="mb-3">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
+            {{ render_field(form.username) }}
+            {{ render_field(form.password) }}
+            {{ render_button_field(form.submit) }}
         </form>    
     </div>
 {% endblock %}

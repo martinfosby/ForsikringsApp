@@ -2,26 +2,17 @@
 
 {% block title %}Login{% endblock %}
 
+{% from "macros.html" import render_field, render_boolean_field, render_button_field %}
+
 {% block content %}
     <div class="container">
         <h2>Login</h2>
         <form method="POST" action="{{ url_for('.login') }}" class="mt-4">
             {{ form.hidden_tag() }}
-            <div class="mb-3">
-                {{ form.username.label(class="form-label") }}
-                {{ form.username(class="form-control", id="username") }}
-            </div>
-            <div class="mb-3">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control", id="password") }}
-            </div>
-            <div class="mb-3">
-                {{ form.remember_me(class="form-check-input")}}
-                {{ form.remember_me.label(class="form-check-label")}}
-            </div>
-            <div class="mb-3">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
+            {{ render_field(form.username) }}
+            {{ render_field(form.password) }}
+            {{ render_boolean_field(form.remember_me) }}
+            {{ render_button_field(form.submit) }}
         </form>
     </div>
 {% endblock %}
