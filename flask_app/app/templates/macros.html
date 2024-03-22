@@ -20,6 +20,25 @@
     </div>
 {% endmacro %}
 
+{% macro render_page_content(title, form_action_url, form, additional_content='') %}
+    <div class="container">
+        <h2>{{ title }}</h2>
+        <form method="POST" action="{{ form_action_url }}" class="mt-4">
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+                {% if field.type == 'BooleanField' %}
+                    {# Render boolean field differently #}
+                    {{ render_boolean_field(field) }}
+                {% else %}
+                    {# Render other fields using render_field macro #}
+                    {{ render_field(field) }}
+                {% endif %}
+            {% endfor %}
+            {{ render_button_field(form.submit) }}
+        </form>
+    </div>
+{% endmacro %}
+
 
 {% macro render_flashed_messages() %}
     {% with messages = get_flashed_messages(with_categories=true) %}
