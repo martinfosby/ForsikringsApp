@@ -2,11 +2,11 @@
 
 {% block title %}Register{% endblock %}
 
-{% from "macros.html" import render_page_content %}
+{% from "macros.html" import render_form %}
 
 {% block content %}
     {{ 
-        render_page_content(
+        render_form(
             title="Register", 
             form_action_url=url_for('.register'), 
             form=form

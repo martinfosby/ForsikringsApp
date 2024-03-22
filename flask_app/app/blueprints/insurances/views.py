@@ -1,5 +1,4 @@
-import select
-from flask import jsonify, redirect, render_template, request, url_for
+from flask import current_app, jsonify, redirect, render_template, request, url_for
 from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance
@@ -15,7 +14,7 @@ def make_insurance():
 @login_required
 def insurances_list():
     insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
-    print(current_user)
+    current_app.logger.info(current_user)
    
     return render_template('insurances/insurances_list.html', insurances=insurances, user=current_user)
 
