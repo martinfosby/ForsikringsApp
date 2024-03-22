@@ -4,7 +4,7 @@ from app import models
 from log_handler import logger
 
 
-def create_app(config_class=DevelopmentConfig):
+def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
     app.config.from_object(config_class)
 
