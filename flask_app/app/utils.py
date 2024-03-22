@@ -1,5 +1,6 @@
 from urllib.parse import urljoin, urlparse
 
+
 def url_has_allowed_host_and_scheme(target, host):
     ref_url = urlparse(host)
     parsed_url = urlparse(urljoin(host, target))
@@ -15,4 +16,3 @@ def test_db_connection(db):
     except Exception as e:
         # If connection fails, print the error
         print("Connection failed:", e)
-
