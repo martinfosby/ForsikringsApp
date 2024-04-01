@@ -4,12 +4,15 @@ from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance
 from flask_login import current_user, login_required
+from .forms import MakeInsuranceForm
 
 
 @bp.route('/make/insurance', methods=['GET'])
 @login_required
 def make_insurance():
-    return render_template('insurances/make_insurance.html')
+    form = MakeInsuranceForm()
+    companies = db.session.execute(db.select(Company)).all()
+    return render_template('insurances/make_insurance.html', form=form, companies=companies)
 
 @bp.route('/insurances', methods=['GET'])
 @login_required
@@ -25,6 +28,7 @@ def get_insurance_companies():
     companies = Company.query.all()
     company_names = [company.name for company in companies]
     return jsonify(company_names)
+
 
 @bp.route('/company/add', methods=['POST'])
 @login_required
