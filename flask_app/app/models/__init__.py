@@ -1,3 +1,4 @@
+from sqlalchemy import Nullable
 from app.extensions import db
 from flask_login import UserMixin
 
@@ -46,7 +47,7 @@ class Insurance(db.Model):
     due_date = db.Column(db.Date)
     unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
     settlement_id = db.relationship(f'Settlement', back_populates='insurance')
     customer = db.relationship(f'Customer', back_populates='insurance')
     company = db.relationship(f'Company', back_populates='insurance')
