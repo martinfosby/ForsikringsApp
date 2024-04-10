@@ -48,9 +48,11 @@ class Insurance(db.Model):
     unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
-    settlement_id = db.relationship(f'Settlement', back_populates='insurance')
+    unit_type = db.relationship(f'UnitType', back_populates='insurance')
     customer = db.relationship(f'Customer', back_populates='insurance')
     company = db.relationship(f'Company', back_populates='insurance')
+    settlement = db.relationship(f'Settlement', back_populates='insurance')
+
 
 
 class Offer(db.Model):
@@ -68,3 +70,4 @@ class Settlement(db.Model):
     description = db.Column(db.String(300))
     sum = db.Column(db.String(45))
     insurance_id = db.Column(db.Integer, db.ForeignKey('insurance.id'))
+    insurance = db.relationship(f'Insurance', back_populates='settlement')
