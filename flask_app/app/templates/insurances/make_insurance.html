@@ -28,13 +28,10 @@
                 {{ form.due_date(class="form-control", id="due_date") | escape }}
             </div>
             <div class="mb-3">
-                <label for="company_id" class="form-label">{{ form.company_id.label }}</label>
-                <select name="company_id" id="company_id" class="form-select">
-                    {% for company in companies %}
-                    <option value="{{ company[0].id }}">{{ company[0].name }}</option>
-                    {% endfor %}
-                </select>
+                {{ form.company_id.label(class="form-label") }}
+                {{ form.company_id(class="form-select", id="company_id") }}
             </div>
+            
             <div class="mb-3">
                 {{ form.submit(class="btn btn-primary") }}
             </div>

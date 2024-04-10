@@ -2,6 +2,14 @@
 
 {% block content %}
     <h1>Insurances</h1>
+
+    <form method="POST" action="{{ url_for('insurances.insurances_list') }}">
+        {{ form.hidden_tag() }}
+        {{ form.insuranceStatus.label }} {{ form.insuranceStatus() }}
+        {{ form.submit() }}
+    </form>
+    
+
     <table class = "table"> <!--ikke slett-->
         <tr>
             <th style="font-size: 18px;">Name</th>

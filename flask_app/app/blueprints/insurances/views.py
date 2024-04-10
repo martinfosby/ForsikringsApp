@@ -1,9 +1,11 @@
-from flask import current_app, jsonify, redirect, render_template, request, url_for
+from flask import current_app, jsonify, redirect, render_template, request, url_for, Request
 from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance, UnitType
 from flask_login import current_user, login_required
-from .forms import MakeInsuranceForm
+from .forms import DropDownForm, MakeInsuranceForm
+from datetime import date
+
 
 
 from flask import flash, redirect, url_for
@@ -28,6 +30,7 @@ def make_insurance():
         # Assuming you have an Insurance model with appropriate fields
         new_insurance = Insurance(label=label, unit_type_id=unit_type_id, customer_id=customer_id, value=value,
                                   price=price, due_date=due_date, company_id=company_id)
+
         db.session.add(new_insurance)
         db.session.commit()
 
@@ -37,13 +40,37 @@ def make_insurance():
     companies = db.session.execute(db.select(Company)).all()
     return render_template('insurances/make_insurance.html', form=form, companies=companies)
 
-@bp.route('/insurances', methods=['GET'])
+@bp.route('/insurances', methods=['GET', 'POST'])
 @login_required
 def insurances_list():
-    insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
-    current_app.logger.info(current_user)
-   
-    return render_template('insurances/insurances_list.html', insurances=insurances, user=current_user)
+    if request.method == 'POST':
+        form = DropDownForm()
+        selected_option = request.form.get('insuranceStatus')
+        
+        if selected_option == 'insured':
+            # Run the query for insured
+            insurances = db.session.execute(db.select(Insurance).where(
+                (Insurance.customer_id == current_user.id) & 
+                (Insurance.price > 0)
+            )).scalars().all()
+        elif selected_option == 'uninsured':
+            # Run the query for uninsured
+            current_date = date.today()
+            insurances = db.session.execute(db.select(Insurance).where(
+                (Insurance.customer_id == current_user.id) & 
+                (Insurance.price == 0) & 
+                (Insurance.due_date >= current_date)
+            )).scalars().all()
+        else:
+            # Handle other cases or set a default query
+            insurances = []
+        
+        return render_template('insurances/insurances_list.html', insurances=insurances, form=form)
+    else:
+        form = DropDownForm()
+        insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
+        return render_template('insurances/insurances_list.html', insurances=insurances, form=form)
+
 
 @bp.route('/companies', methods=['GET'])
 @login_required

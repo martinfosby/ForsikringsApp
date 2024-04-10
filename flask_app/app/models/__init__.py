@@ -1,3 +1,4 @@
+from sqlalchemy import Nullable, true
 from app.extensions import db
 from flask_login import UserMixin
 
@@ -40,10 +41,10 @@ class UnitType(db.Model):
 class Insurance(db.Model):
     __tablename__ = "insurance"
     id = db.Column(db.Integer, primary_key=True)
-    label = db.Column(db.String(90))
-    value = db.Column(db.Integer)
-    price = db.Column(db.Integer)
-    due_date = db.Column(db.Date)
+    label = db.Column(db.String(90), nullable=True)
+    value = db.Column(db.Integer, nullable=True)
+    price = db.Column(db.Integer, nullable=True)
+    due_date = db.Column(db.Date, nullable=True)
     unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
