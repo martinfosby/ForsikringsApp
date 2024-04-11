@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Register Settlement{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Register Settlement</h2>
+        <form method="POST" action="{{ url_for('.make_settlement') }}" class="mt-4">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.insurance_id.label(class="form-label") }}
+                {{ form.insurance_id(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.sum.label(class="form-label") }}
+                {{ form.sum(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
