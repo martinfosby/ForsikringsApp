@@ -8,6 +8,7 @@
                     <h1 class="mt-5">Hi, {{ current_user.username }}!</h1>
                     <div class="list-group mt-3">
                         <a href="{{ url_for('insurances.make_insurance') }}" class="list-group-item list-group-item-action">Make New Insurance</a>
+                        <a href="{{ url_for('settlements.make_settlement') }}" class="list-group-item list-group-item-action">Make New Settlement</a>
                         <a href="{{ url_for('auth.change_password') }}" class="list-group-item list-group-item-action">Change Password</a>
                         <a href="{{ url_for('auth.change_username') }}" class="list-group-item list-group-item-action">Change Username</a>
                         <a href="{{ url_for('auth.delete') }}" class="list-group-item list-group-item-action">Delete Account</a>

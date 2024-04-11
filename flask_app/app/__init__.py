@@ -33,10 +33,12 @@ def create_app(config_class=ProductionConfig):
     from app.blueprints.main import bp as main_bp
     from app.blueprints.auth import bp as user_bp
     from app.blueprints.insurances import bp as insurance_bp
+    from app.blueprints.settlements import bp as settlement_bp
     from app.blueprints.management import bp as management_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)
+    app.register_blueprint(settlement_bp)
     app.register_blueprint(management_bp)
 
     return app
