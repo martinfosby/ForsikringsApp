@@ -43,9 +43,9 @@ def make_insurance():
 @bp.route('/insurances', methods=['GET', 'POST'])
 @login_required
 def insurances_list():
+    form = DropDownForm()
     if request.method == 'POST':
-        form = DropDownForm()
-        selected_option = request.form.get('insuranceStatus')
+        selected_option = form.insuranceStatus.data
         
         if selected_option == 'insured':
             # Run the query for insured
@@ -63,11 +63,11 @@ def insurances_list():
             )).scalars().all()
         else:
             # Handle other cases or set a default query
-            insurances = []
+            insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
+            
         
         return render_template('insurances/insurances_list.html', insurances=insurances, form=form)
     else:
-        form = DropDownForm()
         insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
         return render_template('insurances/insurances_list.html', insurances=insurances, form=form)
 
