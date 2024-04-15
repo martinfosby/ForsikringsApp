@@ -26,6 +26,32 @@
 {% endmacro %}
 
 
+{% macro render_table(title, table, class='') %}
+
+    <h1>{{ title }}</h1>
+
+    <table class = "table">
+        {% for row in table.keys %}
+            <tr>
+                <th style="font-size: 18px;">{{ row.name }}</th>
+            </tr>
+        {% endfor %}
+    </table>
+
+        {#
+            
+        {% for row in table.all %}
+            <tr>
+                <td>{{ row.label }}</td>
+                <td>{{ row.value }}</td>
+                <td>{{ row.price }}</td>
+                <td>{{ row.due_date }}</td>
+                <td>{{ row.company.name }}</td>
+            </tr>
+        {% endfor %}
+            #}
+{% endmacro %}
+
 
 
 {% macro render_flashed_messages(class='') %}

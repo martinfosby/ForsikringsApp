@@ -1,8 +1,8 @@
 import select
-from flask import jsonify, redirect, render_template, request, url_for
+from flask import redirect, render_template, url_for
 from app.blueprints.settlements import bp
 from app.extensions import db
-from app.models import Company, Settlement
+from app.models import Company, Settlement, Insurance
 from flask_login import current_user, login_required
 from .forms import MakeSettlementForm
 
@@ -27,3 +27,15 @@ def make_settlement():
         return redirect(url_for('main.index')) 
 
     return render_template('settlements/make_settlement.html', form=form, companies=companies)
+
+
+
+@bp.route('/settlements', methods=['GET'])
+@login_required
+def settlement_list():
+    settlements = db.session.query(Settlement)\
+        .join(Settlement.insurance)\
+        .where(Insurance.customer_id == current_user.id).all()
+    
+
+    return render_template('settlements/settlements_list.html', settlements=settlements)

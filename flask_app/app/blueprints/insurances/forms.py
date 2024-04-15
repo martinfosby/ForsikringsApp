@@ -18,7 +18,7 @@ class DropDownForm(FlaskForm):
     insuranceStatus = SelectField(
         'Insurance Status', 
         validators=[DataRequired()], 
-        choices=[('insured', 'Insured'), ('uninsured', 'Un-insured'), ('insured_uninsured', 'Insured/Uninsured')]
+        choices=[('insured_uninsured', 'Insured/Uninsured'), ('insured', 'Insured'), ('uninsured', 'Un-insured')]
     )
     submit = SubmitField('Filter')
     

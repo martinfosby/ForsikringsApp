@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+    <h1>Insurances</h1>
+
+    <table class = "table"> <!--ikke slett-->
+        <tr>
+            <th style="font-size: 18px;">id</th>
+            <th style="font-size: 18px;">insurance id</th>
+            <th style="font-size: 18px;">description</th>
+            <th style="font-size: 18px;">sum</th>
+        </tr>
+
+        {% for settlement in settlements %}
+            <tr>
+                <td>{{ settlement.id }}</td>
+                <td>{{ settlement.insurance_id }}</td>
+                <td>{{ settlement.description }}</td>
+                <td>{{ settlement.sum }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

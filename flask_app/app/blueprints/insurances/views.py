@@ -72,6 +72,8 @@ def insurances_list():
         return render_template('insurances/insurances_list.html', insurances=insurances, form=form)
 
 
+
+
 @bp.route('/companies', methods=['GET'])
 @login_required
 def get_insurance_companies():
