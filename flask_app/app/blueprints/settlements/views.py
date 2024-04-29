@@ -1,13 +1,10 @@
-import select
 from flask import redirect, render_template, url_for
 from app.blueprints.settlements import bp
 from app.extensions import db
 from app.models import Company, Settlement, Insurance
 from flask_login import current_user, login_required
-
-
+from sqlalchemy import asc 
 from .forms import MakeSettlementForm
-from sqlalchemy import func
 
 from flask import flash, redirect, url_for
 
@@ -17,9 +14,10 @@ from flask import flash, redirect, url_for
 def make_settlement():
     form = MakeSettlementForm()
     companies = Company.query.all() 
-    
-    user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all()
-    form.insurance_label.choices = [(insurance.id, insurance.label) for insurance in user_insurances]
+
+    user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all() #filtering registered insurances for the user
+
+    form.insurance_label.choices = [(insurance.id, insurance.label) for insurance in user_insurances] #views the registered insurances in the form of a dropdown menu
 
     if form.validate_on_submit():
 
@@ -43,7 +41,8 @@ def make_settlement():
 def settlement_list():
     settlements = db.session.query(Settlement)\
         .join(Settlement.insurance)\
-        .where(Insurance.customer_id == current_user.id).all()
+        .where(Insurance.customer_id == current_user.id)\
+        .order_by(asc(Settlement.id)).all()
     
 
     return render_template('settlements/settlements_list.html', settlements=settlements)
