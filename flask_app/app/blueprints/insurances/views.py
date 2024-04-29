@@ -44,23 +44,31 @@ def make_insurance():
 @login_required
 def insurances_list():
     form = DropDownForm()
-    if request.method == 'POST':
+    if form.validate_on_submit():
         selected_option = form.insuranceStatus.data
         
         if selected_option == 'insured':
             # Run the query for insured
-            insurances = db.session.execute(db.select(Insurance).where(
-                (Insurance.customer_id == current_user.id) & 
-                (Insurance.price > 0)
-            )).scalars().all()
+            current_date = date.today()
+            insurances = db.session.query(Insurance).where(
+                (Insurance.customer_id == current_user.id) &
+                (
+                    (Insurance.price > 0) &
+                    (Insurance.due_date > current_date)
+                )
+            ).all()
         elif selected_option == 'uninsured':
             # Run the query for uninsured
             current_date = date.today()
-            insurances = db.session.execute(db.select(Insurance).where(
-                (Insurance.customer_id == current_user.id) & 
-                (Insurance.price == 0) & 
-                (Insurance.due_date >= current_date)
-            )).scalars().all()
+            insurances = db.session.query(Insurance).where(
+                (Insurance.customer_id == current_user.id) &
+                (
+                    (Insurance.price == 0) | 
+                    (Insurance.price == None) |
+                    (Insurance.due_date <= current_date) | 
+                    (Insurance.due_date == None)
+                )
+            ).all()
         else:
             # Handle other cases or set a default query
             insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
