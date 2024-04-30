@@ -1,13 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Insurances</h1>
+    <h1 class="text-center">Insurances</h1>
 
-    <form method="POST" action="{{ url_for('insurances.insurances_list') }}">
+    <form method="POST" action="{{ url_for('insurances.insurances_list') }}" class="form">
         {{ form.hidden_tag() }}
-        {{ form.insuranceStatus.label }} {{ form.insuranceStatus() }}
-        {{ form.submit() }}
+        <div class="row ms-1">
+            <div class="form-floating col-md-3 p-0"> <!-- Adjust the column width as needed -->
+                {{ form.insuranceStatus(class="form-select", id="insuranceStatus") }}
+                {{ form.insuranceStatus.label(for="insuranceStatus") }}
+            </div>
+            <div class="col-md-3 mt-2"> <!-- Adjust the column width as needed -->
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
     </form>
+    
+    
     
 
     <table class = "table"> <!--ikke slett-->
