@@ -1,4 +1,5 @@
 from urllib.parse import urljoin, urlparse
+from flask import request, session
 
 
 def url_has_allowed_host_and_scheme(target, host):

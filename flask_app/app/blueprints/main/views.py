@@ -1,11 +1,7 @@
-from cgitb import text
-import select
-from flask import render_template, request, redirect, session,flash,url_for
-from flask_login import login_required, login_user, logout_user, current_user
+from flask import g, render_template, request, redirect, session
+from flask_login import login_required, current_user
 from app.blueprints.main import bp
-from app.extensions import login_manager, db
-from app.blueprints.auth.login_manager import load_user
-
+from app.utils import url_has_allowed_host_and_scheme
 
 @bp.route('/')
 @bp.route('/index')

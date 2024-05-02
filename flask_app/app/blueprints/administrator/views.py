@@ -1,10 +1,16 @@
-from . import bp, admin
+from . import bp
 from flask import abort, render_template, request, redirect, session,flash,url_for
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from app.extensions import db
 from app.models import Customer
 from app.blueprints.auth.login_manager import load_user
+# from flask_admin import AdminIndexView, expose
 
+
+# class MyHomeView(AdminIndexView):
+#     @expose('/admin')
+#     def index(self):
+#         return self.render('administrator/home.html')
 
 
 

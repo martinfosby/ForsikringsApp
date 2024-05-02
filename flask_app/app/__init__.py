@@ -1,8 +1,5 @@
 from flask import Flask
 from config import ProductionConfig, DevelopmentConfig, TestingConfig
-from app import models
-from log_handler import logger
-
 
 def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
@@ -40,5 +37,6 @@ def create_app(config_class=ProductionConfig):
     app.register_blueprint(insurance_bp)
     app.register_blueprint(settlement_bp)
     app.register_blueprint(administrator_bp)
-
+    
     return app
+
