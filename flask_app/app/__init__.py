@@ -32,11 +32,13 @@ def create_app(config_class=ProductionConfig):
     from app.blueprints.insurances import bp as insurance_bp
     from app.blueprints.settlements import bp as settlement_bp
     from app.blueprints.administrator import bp as administrator_bp
+    from app.blueprints.api import bp as api_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)
     app.register_blueprint(settlement_bp)
     app.register_blueprint(administrator_bp)
+    app.register_blueprint(api_bp)
     
     return app
 

@@ -1,4 +1,4 @@
-from flask import current_app, jsonify, redirect, render_template, request, url_for, Request
+from flask import redirect, render_template, url_for
 from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance, UnitType
@@ -81,24 +81,3 @@ def insurances_list():
 
 
 
-
-@bp.route('/companies', methods=['GET'])
-@login_required
-def get_insurance_companies():
-    companies = Company.query.all()
-    company_names = [company.name for company in companies]
-    return jsonify(company_names)
-
-
-@bp.route('/company/add', methods=['POST'])
-@login_required
-def add_insurance_company():
-    data = request.json
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-    
-    new_company = Company(name=data['name'], other_field=data['other_field'])
-    db.session.add(new_company)
-    db.session.commit()
-
-    return jsonify({'message': 'Insurance company added successfully'})
