@@ -17,6 +17,3 @@ login_manager.session_protection = "basic" # set to either None "basic" or "Stro
 def load_user(user_id):
     return db.session.query(Customer).get(user_id)
 
-# @login_manager.unauthorized_handler
-# def unauthorized_callback():
-#     return redirect(url_for("auth.login"))

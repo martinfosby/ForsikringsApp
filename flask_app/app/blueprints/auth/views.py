@@ -15,6 +15,10 @@ from app.blueprints.auth.login_manager import load_user
 
 @bp.route("/users")
 def list():
+    # Query the database for all users
+    user = current_user
+    if not user.is_admin:
+        abort(403)
     users = db.session.execute(db.select(Customer).order_by(Customer.username)).scalars()
     return render_template("auth/list.html", users=users)
 
