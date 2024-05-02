@@ -7,6 +7,7 @@ from app.models import Customer
 from app.blueprints.auth import bp
 from app.blueprints.auth.forms.register_form import RegisterForm
 from app.blueprints.auth.forms.login_form import LoginForm
+from app.blueprints.auth.forms.delete_form import DeleteForm
 from .forms.change_password_form import ChangePasswordForm
 from .forms.change_username_form import ChangeUsernameForm
 from app.blueprints.auth.login_manager import load_user
@@ -105,15 +106,18 @@ def detail(id):
 @bp.route("/delete", methods=["GET", "POST"])
 @login_required
 def delete():
-    user = current_user
-    try:
-        db.session.delete(user)
-        db.session.commit()
-        flash(f"Deleted account {user.username}", category='success')
-    except Exception as e:
-        current_app.logger.debug(f"Failed to delete account {user.username}", exc_info=True)
-        flash(f"failed to delete account {user.username}", category='danger')
-    return redirect(url_for("main.index"))
+    form = DeleteForm()
+    if form.validate_on_submit():
+        user = current_user
+        try:
+            db.session.delete(user)
+            db.session.commit()
+            flash(f"Deleted account {user.username}", category='success')
+        except Exception as e:
+            current_app.logger.debug(f"Failed to delete account {user.username}", exc_info=True)
+            flash(f"failed to delete account {user.username}", category='danger')
+        return redirect(url_for("main.index"))
+    return render_template("auth/delete.html", form=form)
 
 
 @bp.route("/change/password", methods=['GET', 'POST'])
