@@ -1,5 +1,8 @@
+from dataclasses import dataclass
+from datetime import date
 from app.extensions import db
 from flask_login import UserMixin
+from sqlalchemy.ext import serializer
 
 
 class Customer(db.Model, UserMixin):
@@ -36,22 +39,33 @@ class UnitType(db.Model):
     insurance = db.relationship(f'Insurance', back_populates='unit_type')
     offer = db.relationship(f'Offer', back_populates='unit_type')
 
-
+@dataclass()
 class Insurance(db.Model):
     __tablename__ = "insurance"
-    id = db.Column(db.Integer, primary_key=True)
-    label = db.Column(db.String(90), nullable=True)
-    value = db.Column(db.Integer, nullable=True)
-    price = db.Column(db.Integer, nullable=True)
-    due_date = db.Column(db.Date, nullable=True)
-    unit_type_id = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
+    id: int = db.Column(db.Integer, primary_key=True)
+    label: str = db.Column(db.String(90), nullable=True)
+    value: int = db.Column(db.Integer, nullable=True)
+    price: int = db.Column(db.Integer, nullable=True)
+    due_date: str = db.Column(db.Date, nullable=True)
+    unit_type_id: int = db.Column(db.Integer, db.ForeignKey('unit_type.id'))
+    customer_id: int = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    company_id: int = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
     unit_type = db.relationship(f'UnitType', back_populates='insurance')
     customer = db.relationship(f'Customer', back_populates='insurance')
     company = db.relationship(f'Company', back_populates='insurance')
     settlement = db.relationship(f'Settlement', back_populates='insurance')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'label': self.label,
+            'value': self.value,
+            'price': self.price,
+            'due_date': self.due_date.isoformat() if self.due_date else None,
+            'unit_type_id': self.unit_type_id,
+            'customer_id': self.customer_id,
+            'company_id': self.company_id,
+        }
 
 
 class Offer(db.Model):

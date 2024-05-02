@@ -9,7 +9,8 @@ from app.models import Company, Insurance, Settlement
 def api_get_insurances():
     if request.method == 'GET':
         insurances = db.session.query(Insurance).all()
-        return jsonify(insurances)
+        serialized = [insurance.to_dict() for insurance in insurances]
+        return serialized
 
     if request.method == 'POST':
         data = request.json
