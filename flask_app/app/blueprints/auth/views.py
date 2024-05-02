@@ -93,14 +93,14 @@ def logout():
 
 
 
-@bp.route("/user/<int:id>")
+@bp.route("/detail")
 @login_required
-def detail(id):
-    user = db.get_or_404(Customer, id)
+def details():
+    user = db.get_or_404(Customer, current_user.id)
     if current_user == user:
         return render_template("auth/detail.html", user=user)
     else:
-        return redirect(url_for(".login"))
+        return redirect(url_for("main.index"))
 
 
 @bp.route("/delete", methods=["GET", "POST"])
