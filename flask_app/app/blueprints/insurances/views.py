@@ -56,28 +56,49 @@ def insurances_list():
         if selected_option == 'insured':
             # Run the query for insured
             current_date = date.today()
-            insurances = db.session.query(Insurance).where(
-                (Insurance.customer_id == current_user.id) &
-                (
-                    (Insurance.price > 0) &
-                    (Insurance.due_date > current_date)
-                )
-            ).all()
+            if current_user.is_anonymous:
+                insurances = db.session.query(InsuranceLocal).where(
+                    (
+                        (InsuranceLocal.price > 0) &
+                        (InsuranceLocal.due_date > current_date)
+                    )
+                ).all()
+            else:
+                insurances = db.session.query(Insurance).where(
+                    (Insurance.customer_id == current_user.id) &
+                    (
+                        (Insurance.price > 0) &
+                        (Insurance.due_date > current_date)
+                    )
+                ).all()
         elif selected_option == 'uninsured':
             # Run the query for uninsured
             current_date = date.today()
-            insurances = db.session.query(Insurance).where(
-                (Insurance.customer_id == current_user.id) &
-                (
-                    (Insurance.price == 0) | 
-                    (Insurance.price == None) |
-                    (Insurance.due_date <= current_date) | 
-                    (Insurance.due_date == None)
+            if current_user.is_anonymous:
+                insurances = db.session.query(InsuranceLocal).where(
+                    (
+                        (InsuranceLocal.price == 0) | 
+                        (InsuranceLocal.price == None) |
+                        (InsuranceLocal.due_date <= current_date) | 
+                        (InsuranceLocal.due_date == None)
+                    )
                 )
-            ).all()
+            else:
+                insurances = db.session.query(Insurance).where(
+                    (Insurance.customer_id == current_user.id) &
+                    (
+                        (Insurance.price == 0) | 
+                        (Insurance.price == None) |
+                        (Insurance.due_date <= current_date) | 
+                        (Insurance.due_date == None)
+                    )
+                ).all()
         else:
             # Handle other cases or set a default query
-            insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
+            if current_user.is_anonymous:
+                insurances = db.session.query(InsuranceLocal).all()
+            else:
+                insurances = db.session.execute(db.select(Insurance).where(Insurance.customer_id==current_user.id)).scalars().all()
             
         
         return render_template('insurances/insurances_list.html', insurances=insurances, form=form)
