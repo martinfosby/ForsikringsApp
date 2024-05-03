@@ -1,4 +1,7 @@
 from flask import Flask
+from app import models # ikke fjern
+from app.models import local # ikke fjern
+from app.models.test_data import add_local_test_data
 from config import ProductionConfig, DevelopmentConfig, TestingConfig
 
 def create_app(config_class=ProductionConfig):
@@ -18,6 +21,7 @@ def create_app(config_class=ProductionConfig):
             # Create all tables
             db.create_all()
             app.logger.info("Database created successfully.")
+            add_local_test_data()
         except Exception as e:
             # If reflection fails, it means the database doesn't exist
             app.logger.critical("Database creation failed. Attempting to reflect database.", exc_info=True)

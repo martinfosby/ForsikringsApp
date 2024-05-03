@@ -5,7 +5,6 @@ from app.blueprints.main import bp
 @bp.route('/')
 @bp.route('/index')
 @bp.route('/home', endpoint='home')
-@login_required
 def index():
     return render_template('main/index.html')
 

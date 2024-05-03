@@ -30,7 +30,9 @@ class ProductionConfig(Config):
     USERNAME="bodovision"  # Your MySQL username
     PASSWORD="veldig bra Grupp3"  # Your MySQL password
     SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{DB_SERVER}/{DATABASE}'
-
+    SQLALCHEMY_BINDS = {
+        'local': 'sqlite:///local.db',
+    }
 
 class DevelopmentConfig(Config):
     """Uses development database server."""

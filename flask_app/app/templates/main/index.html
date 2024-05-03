@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if current_user.is_authenticated %}
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <h1 class="mt-5">Hi, {{ current_user.username }}!</h1>
-                    <div class="list-group mt-3">
-                        <a href="{{ url_for('insurances.make_insurance') }}" class="list-group-item list-group-item-action">Make New Insurance</a>
-                        <a href="{{ url_for('settlements.make_settlement') }}" class="list-group-item list-group-item-action">Make New Settlement</a>
-                        <a href="{{ url_for('auth.change_password') }}" class="list-group-item list-group-item-action">Change Password</a>
-                        <a href="{{ url_for('auth.change_username') }}" class="list-group-item list-group-item-action">Change Username</a>
-                        <a href="{{ url_for('auth.delete') }}" class="list-group-item list-group-item-action">Delete Account</a>
-                    </div>
-                </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="mt-5">Hi {{ current_user.username }}!</h1>
+            <div class="list-group mt-3">
+                <a href="{{ url_for('insurances.insurances_list') }}" class="list-group-item list-group-item-action">View Insurances</a>
+                <a href="{{ url_for('settlements.settlement_list') }}" class="list-group-item list-group-item-action">View Settlements</a>
+                <a href="{{ url_for('insurances.make_insurance') }}" class="list-group-item list-group-item-action">Make New Insurance</a>
+                <a href="{{ url_for('settlements.make_settlement') }}" class="list-group-item list-group-item-action">Make New Settlement</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.change_password') }}" class="list-group-item list-group-item-action">Change Password</a>
+                <a href="{{ url_for('auth.change_username') }}" class="list-group-item list-group-item-action">Change Username</a>
+                <a href="{{ url_for('auth.delete') }}" class="list-group-item list-group-item-action">Delete Account</a>
+                {% endif %}
             </div>
         </div>
-    {% endif %}
+    </div>
+</div>
 {% endblock %}
