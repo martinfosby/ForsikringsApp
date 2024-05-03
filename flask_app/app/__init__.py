@@ -1,4 +1,5 @@
 from flask import Flask
+from app import models # ikke fjern
 from config import ProductionConfig, DevelopmentConfig, TestingConfig
 
 def create_app(config_class=ProductionConfig):
