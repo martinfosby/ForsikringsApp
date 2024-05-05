@@ -7,5 +7,3 @@ from app.blueprints.main import bp
 @bp.route('/home', endpoint='home')
 def index():
     return render_template('main/index.html')
-
-

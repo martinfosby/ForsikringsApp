@@ -13,6 +13,7 @@ def create_app(config_class=ProductionConfig):
     admin.init_app(app)
     csrf.init_app(app)
 
+    
    # app context work
     with app.app_context():
         try:
@@ -25,6 +26,8 @@ def create_app(config_class=ProductionConfig):
             # Try to reflect the database schema
             db.reflect()
             app.logger.info("Database reflection successful.")
+
+        
 
 
     # blueprints
