@@ -1,5 +1,119 @@
 {% extends "base.html" %}
 
+{% block indexeddb %}
+{% if not current_user.is_authenticated %}
+    <script>
+        // Display data from IndexedDB
+        function displayInsurances(insuranceData) {
+            insuranceData.forEach(function(insurance) {
+                var tableBody = document.getElementById('insuranceTableBody');
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${insurance.label}</td>
+                    <td>${insurance.unit_type}</td>
+                    <td>${insurance.value}</td>
+                    <td>${insurance.price}</td>
+                    <td>${insurance.due_date}</td>
+                    <td>${insurance.company}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function displayInsurance(insuranceData) {
+            var tableBody = document.getElementById('insuranceTableBody');
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${insuranceData.label}</td>
+                <td>${insuranceData.unit_type}</td>
+                <td>${insuranceData.value}</td>
+                <td>${insuranceData.price}</td>
+                <td>${insuranceData.due_date}</td>
+                <td>${insuranceData.company}</td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        function emptyTable() {
+            var tableBody = document.getElementById('insuranceTableBody');
+            // Remove all child nodes
+            while (tableBody.firstChild) {
+                tableBody.removeChild(tableBody.firstChild);
+            }
+        }
+       
+
+        function runInsuranceTransaction(db) {
+            console.log('Running transaction...');
+            var transaction = db.transaction(['insurance'], 'readonly');
+            var insuranceStore = transaction.objectStore('insurance');            
+            
+            return insuranceStore
+        }
+        
+        // Open a connection to IndexedDB
+        const request = indexedDB.open('bodovision', 1);
+
+        request.onsuccess = function(event) {
+            // Get the current date
+            var currentDate = new Date().toISOString().slice(0, 10);
+            var db = event.target.result;
+            
+            let filterClicked = false
+            
+            const filter = document.getElementById('filter').onclick = function(event) {
+                event.preventDefault();
+                filterClicked = true
+                const filterValue = document.getElementById('insuranceStatus');
+                if (filterValue.value === 'insured') {
+                    emptyTable();
+                    insuranceStore = runInsuranceTransaction(db);
+                    insuranceStore.openCursor().onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            if (cursor.value.due_date > currentDate && cursor.value.price !== 0) {
+                                displayInsurance(cursor.value);
+                            }
+                            cursor.continue();
+                        }
+                    }
+                } else if (filterValue.value === 'uninsured') {
+                    emptyTable();
+                    insuranceStore = runInsuranceTransaction(db);
+                    insuranceStore.openCursor().onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            if (cursor.value.due_date < currentDate || cursor.value.price === 0) {
+                                displayInsurance(cursor.value);
+                            }
+                            cursor.continue();
+                        }
+                    }
+                } else if (filterValue.value === 'all') {
+                    emptyTable();
+                    insuranceStore = runInsuranceTransaction(db);
+                    insuranceStore.getAll().onsuccess = function(event) {
+                        displayInsurances(event.target.result);
+                    }
+                }
+            };
+
+            if (!filterClicked) {
+                emptyTable();
+                insuranceStore = runInsuranceTransaction(db);
+                insuranceStore.getAll().onsuccess = function(event) {
+                    displayInsurances(event.target.result);
+                }
+            }
+            
+        };
+        request.onerror = function(event) {
+            console.error('Error opening database:', event.target.error);
+        };
+    </script>
+{% endif %}
+{% endblock indexeddb %}
+
 {% block content %}
     <h1 class="text-center">Insurances</h1>
 
@@ -11,32 +125,42 @@
                 {{ form.insuranceStatus.label(for="insuranceStatus") }}
             </div>
             <div class="col-md-3 mt-2"> <!-- Adjust the column width as needed -->
-                {{ form.submit(class="btn btn-primary") }}
+                {{ form.submit(class="btn btn-primary", id="filter") }}
             </div>
         </div>
     </form>
     
-    
-    
 
     <table class = "table"> <!--ikke slett-->
-        <tr>
-            <th style="font-size: 18px;">Name</th>
-            <th style="font-size: 18px;">Value(kr)</th> 
-            <th style="font-size: 18px;">Price(kr)</th> 
-            <th style="font-size: 18px;">Due date</th> 
-            <th style="font-size: 18px;">Company</th> 
-        </tr>
-
-        {% for insurance in insurances %}
+        <thead>
+            <tr>
+                <th style="font-size: 18px;">Name</th>
+                <th style="font-size: 18px;">Unit type</th>
+                <th style="font-size: 18px;">Value(kr)</th> 
+                <th style="font-size: 18px;">Price(kr)</th> 
+                <th style="font-size: 18px;">Due date</th> 
+                <th style="font-size: 18px;">Company</th> 
+            </tr>
+        </thead>
+        
+        {% if current_user.is_authenticated %}
+        <tbody >
+            {% for insurance in insurances %}
             <tr>
                 <td>{{ insurance.label }}</td>
+                <td>{{ insurance.unit_type.name }}</td>
                 <td>{{ insurance.value }}</td>
                 <td>{{ insurance.price }}</td>
                 <td>{{ insurance.due_date }}</td>
                 <td>{{ insurance.company.name }}</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <tbody id="insuranceTableBody">
+
+        </tbody>    
+        {% endif %}
     </table>
 
 {% endblock %}

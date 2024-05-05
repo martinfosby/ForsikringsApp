@@ -5,103 +5,108 @@
         {% block head %}
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="static/style.css" />
+            <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-            <title>{% block title %}Insurance{% endblock title %}</title>
+            <title>{% block title %}{% endblock title %}</title>
+            
         {% endblock head %}
     </head>
-        <body>
-            {% block body %}
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                    {% block nav %}
-                        <div class="container-fluid">
-                            <a class="navbar-brand" href="{{ url_for('main.home') }}">Bodø Vision</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.home') }}">Home</a>
-                                    </li>
-                                    {% if current_user.is_authenticated %}
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="{{ url_for('insurances.insurances_list') }}">Insurances</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="{{ url_for('settlements.settlement_list') }}">Settlements</a>
-                                    </li>
+    <body>
+    {% block body %}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        {% block nav %}
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url_for('main.home') }}">Bodø Vision</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url_for('main.home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for('insurances.insurances_list') }}">Insurances</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for('settlements.settlement_list') }}">Settlements</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin
+                            </a>                                        
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="nav-link active" href="{{ url_for('admin.index') }}">dashboard</a>
+                                <a class="nav-link active" href="{{ url_for('auth.list') }}">Users</a>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Account
+                                </a>                                        
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('auth.details') }}">Details</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.change_username') }}">Change Username</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.delete') }}">Delete Account</a></li>
                                 </ul>
-                                <ul class="navbar-nav">
-                                    {% if current_user.is_admin %}
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Admin
-                                        </a>                                        
-                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="nav-link active" href="{{ url_for('admin.index') }}">dashboard</a>
-                                            <a class="nav-link active" href="{{ url_for('auth.list') }}">Users</a>
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                    <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Account
-                                            </a>                                        
-                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <li><a class="dropdown-item" href="{{ url_for('auth.details') }}">Details</a></li>
-                                            <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
-                                            <li><a class="dropdown-item" href="{{ url_for('auth.change_username') }}">Change Username</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item" href="{{ url_for('auth.delete') }}">Delete Account</a></li>
-                                          </ul>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="{{ url_for('auth.logout') }}">Logout</a>
-                                    </li>
-                                </ul>
-                                    {% else %}
-                                </ul>
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
-                                    </li>
-                                </ul>
-                                    {% endif %}
-                            </div>
-                        </div>
-                    {% endblock nav %}
-                </nav>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url_for('auth.logout') }}">Logout</a>
+                        </li>
+                    </ul>
+                    {% else %}
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endblock nav %}
+        </nav>
 
-                <main>
-                    {% block main %}
-                        <div id="content">
-                            {% block content %}
-                            {% endblock content %}
-                        </div>
-                    {% endblock main %}
-                </main>
+        <main>
+        {% block main %}
+            <div id="content">
+            {% block content %}
+            {% endblock content %}
+            </div>
+        {% endblock main %}
+        </main>
 
-                {% block flashes %}
-                    {% from "macros.html" import render_flashed_messages %}
-                    {{ render_flashed_messages() }}
-                {% endblock flashes %}
+        {% block flashes %}
+            {% from "macros.html" import render_flashed_messages %}
+            {{ render_flashed_messages() }}
+        {% endblock flashes %}
 
-                
-                <footer>
-                    {% block footer %}
-                        &copy; Bodø Vision 2024 <a href="http://uit.no/">UiT</a>.
-                    {% endblock footer %}
-                </footer>
+        
+        <footer>
+        {% block footer %}
+            &copy; Bodø Vision 2024 <a href="http://uit.no/">UiT</a>.
+        {% endblock footer %}
+        </footer>
 
 
-                {% block scripts %}
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-                {% endblock scripts %}
-            {% endblock body %}
-        </body>
+        {% block indexeddb %}
+            <script src="{{ url_for('static', filename='indexeddb_setup.js') }}"></script>
+        {% endblock indexeddb %}
+
+        {% block scripts %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        {% endblock scripts %}
+    {% endblock body %}
+    </body>
 </html>
