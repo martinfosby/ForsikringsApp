@@ -1,9 +1,11 @@
-from flask import jsonify, request
+from flask import jsonify, render_template_string, request
 from flask_login import login_required
 from sqlalchemy import asc
 from app.blueprints.api import bp
 from app.extensions import db
 from app.models import Company, Insurance, Settlement
+
+
 
 @bp.route('/insurances', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def api_get_insurances():
@@ -86,3 +88,13 @@ def add_insurance_company():
     db.session.commit()
 
     return jsonify({'message': 'Insurance company added successfully'})
+
+
+@bp.route('/upload/<int:customer_id>', methods=['POST'])
+@login_required
+def upload_indexeddb_data(customer_id: int):
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    return jsonify({'message': 'Data uploaded successfully'})

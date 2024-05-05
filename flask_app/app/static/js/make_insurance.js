@@ -10,15 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const request = indexedDB.open('bodovision', 1);
 
-        // Define the database schema and object stores
-        request.onupgradeneeded = function(event) {
-            var db = event.target.result;
-            var insuranceStore = db.createObjectStore('insurance', { 
-                keyPath: 'id', autoIncrement: true,
-            }); 
-            
-            var settlementStore = db.createObjectStore('settlement', { keyPath: 'id', autoIncrement: true }); 
-        };
 
 
         request.onsuccess = function(event) {

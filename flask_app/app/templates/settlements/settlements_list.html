@@ -3,21 +3,33 @@
 
 
 {% block content %}
-    <h1>Settlements</h1>
+    <h1 class="text-center">Settlements</h1>
 
     <table class = "table"> <!--ikke slett-->
-        <tr>
-            <th style="font-size: 18px;">Insurance</th>
-            <th style="font-size: 18px;">Description</th>
-            <th style="font-size: 18px;">Sum(kr)</th>
-        </tr>
-
-        {% for settlement in settlements %}
+        <thead>
+            <tr>
+                <th style="font-size: 18px;">Insurance</th>
+                <th style="font-size: 18px;">Description</th>
+                <th style="font-size: 18px;">Sum(kr)</th>
+            </tr>
+        </thead>
+        
+        <tbody id="settlements">
+            {% if current_user.is_authenticated %}
+            {% for settlement in settlements %}
             <tr>
                 <td>{{ settlement.insurance.label }}</td>
                 <td>{{ settlement.description }}</td>
                 <td>{{ settlement.sum }}</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
+            {% endif %}
+        </tbody>
+        
+        
     </table>
+    {% if current_user.is_anonymous %}
+    <script src="{{ url_for('static', filename='js/settlements_list.js') }}"></script>
+    {% endif %}
+
 {% endblock %}

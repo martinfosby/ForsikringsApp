@@ -3,26 +3,29 @@
 {% block title %}Register Settlement{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h2>Register Settlement</h2>
-        <form method="POST" action="{{ url_for('.make_settlement') }}" class="mt-4">
-            {{ form.hidden_tag() }}
+<div class="container">
+    <h1 class="text-center">Register Settlement</h2>
+    <form method="POST" action="{{ url_for('.make_settlement') }}" class="mt-4">
+        {{ form.hidden_tag() }}
 
-            <div class="mb-3">
-                {{ form.insurance_label.label(class="form-label") }}
-                {{ form.insurance_label(class="form-select") }}
-            </div>
-            <div class="mb-3">
-                {{ form.description.label(class="form-label") }}
-                {{ form.description(class="form-control") }}
-            </div>
-            <div class="mb-3">
-                {{ form.sum.label(class="form-label") }}
-                {{ form.sum(class="form-control") }}
-            </div>
-            <div class="mb-3">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
-    </div>
+        <div class="mb-3">
+            {{ form.insurance_label.label(class="form-label") }}
+            {{ form.insurance_label(class="form-select", id="insurance_label") }}
+        </div>
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control", id="description") }}
+        </div>
+        <div class="mb-3">
+            {{ form.sum.label(class="form-label") }}
+            {{ form.sum(class="form-control", id="sum") }}
+        </div>
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-primary", id="submit") }}
+        </div>
+    </form>
+</div>
+{% if current_user.is_anonymous %}
+<script src="{{ url_for('static', filename='js/make_settlement.js') }}"></script>
+{% endif %}
 {% endblock %}

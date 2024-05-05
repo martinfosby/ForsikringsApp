@@ -98,6 +98,10 @@
         {% endblock footer %}
         </footer>
 
+        {% block indexeddb_setup %}
+        <script src="{{ url_for('static', filename='js/indexeddb._setup.js') }}"></script>
+        {% endblock indexeddb_setup %}
+
         {% block scripts %}
         {% endblock scripts %}
 
