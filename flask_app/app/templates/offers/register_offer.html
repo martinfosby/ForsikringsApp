@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Register Offer{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Register Offer</h2>
+        <form method="POST" action="{{ url_for('offers.make_offer') }}" class="mt-4">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.label.label(class="form-label") | escape }}
+                {{ form.label(class="form-control", id="label") | escape }}
+            </div>
+            <div class="mb-3">
+                {{ form.price.label(class="form-label") | escape }}
+                {{ form.price(class="form-control", id="price") | escape }}
+            </div>
+            <div class="mb-3">
+                {{ form.company_id.label(class="form-label") }}
+                {{ form.company_id(class="form-select", id="company_id") }}
+            </div>
+            <div class="mb-3">
+                {{ form.insurance_id.label(class="form-label") }}
+                {{ form.insurance_id(class="form-select", id="insurance_id") }}
+            </div>
+            <div class="mb-3">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
