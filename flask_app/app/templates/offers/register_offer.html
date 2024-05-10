@@ -8,12 +8,12 @@
         <form method="POST" action="{{ url_for('offers.make_offer') }}" class="mt-4">
             {{ form.hidden_tag() }}
             <div class="mb-3">
-                {{ form.label.label(class="form-label") | escape }}
-                {{ form.label(class="form-control", id="label") | escape }}
+                {{ form.label.label(class="form-label") }}
+                {{ form.label(class="form-control", id="label") }}
             </div>
             <div class="mb-3">
-                {{ form.price.label(class="form-label") | escape }}
-                {{ form.price(class="form-control", id="price") | escape }}
+                {{ form.price.label(class="form-label") }}
+                {{ form.price(class="form-control", id="price") }}
             </div>
             <div class="mb-3">
                 {{ form.company_id.label(class="form-label") }}
