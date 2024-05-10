@@ -4,7 +4,6 @@ from app.extensions import db
 from app.models import Company, Insurance, Offer
 from flask_login import current_user, login_required
 from .forms import MakeOfferForm
-from datetime import date
 from flask import flash, redirect, url_for
 
 
@@ -42,7 +41,7 @@ def make_offer():
         )
         db.session.add(offer)
         db.session.commit()
-        flash('Offer registered successfully!')
+        flash('Offer registered successfully!', 'success')
         return redirect(url_for('offers.offers_list'))
 
     return render_template('offers/register_offer.html', form=form)

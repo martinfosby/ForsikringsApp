@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if current_user.is_authenticated %}
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <h1 class="mt-5">Hi, {{ current_user.username }}!</h1>
-                    <div class="list-group mt-3">
-                        <a href="{{ url_for('insurances.make_insurance') }}" class="list-group-item list-group-item-action">Make New Insurance</a>
-                        <a href="{{ url_for('settlements.make_settlement') }}" class="list-group-item list-group-item-action">Make New Settlement</a>
-                        <a href="{{ url_for('offers.make_offer') }}" class="list-group-item list-group-item-action">Make New Offer</a>
-                    </div>
-                </div>
+{% if current_user.is_authenticated %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="mt-5">Hi, {{ current_user.username }}!</h1>
+            <div class="list-group mt-3">
+                <a href="{{ url_for('insurances.make_insurance') }}" class="list-group-item list-group-item-action">Make New Insurance</a>
+                <a href="{{ url_for('settlements.make_settlement') }}" class="list-group-item list-group-item-action">Make New Settlement</a>
+                <a href="{{ url_for('offers.make_offer') }}" class="list-group-item list-group-item-action">Make New Offer</a>
             </div>
         </div>
-    {% endif %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}
