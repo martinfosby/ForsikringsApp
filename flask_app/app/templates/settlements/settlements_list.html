@@ -3,21 +3,27 @@
 
 
 {% block content %}
-    <h1>Settlements</h1>
-
+    <h1 class="text-center">Settlements</h1>
+    <div class="text-end me-1">
+        <a href="{{ url_for('settlements.make_settlement') }}" class="btn btn-primary">Register Settlement</a>
+    </div>
     <table class = "table"> <!--ikke slett-->
-        <tr>
-            <th style="font-size: 18px;">Insurance</th>
-            <th style="font-size: 18px;">Description</th>
-            <th style="font-size: 18px;">Sum(kr)</th>
-        </tr>
+        <thead>
+            <tr>
+                <th style="font-size: 18px;">Insurance</th>
+                <th style="font-size: 18px;">Description</th>
+                <th style="font-size: 18px;">Sum(kr)</th>
+            </tr>
+        </thead>
 
-        {% for settlement in settlements %}
+        <tbody>
+            {% for settlement in settlements %}
             <tr>
                 <td>{{ settlement.insurance.label }}</td>
                 <td>{{ settlement.description }}</td>
                 <td>{{ settlement.sum }}</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

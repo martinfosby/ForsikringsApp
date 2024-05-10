@@ -1,46 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 class="text-center">Insurances</h1>
+<h1 class="text-center">Insurances</h1>
 
-    <form method="POST" action="{{ url_for('insurances.insurances_list') }}" class="form">
+<div class="d-flex flex-row justify-content-between">
+    <form method="POST" action="{{ url_for('insurances.insurances_list') }}" class="form d-flex flex-row m-1">
         {{ form.hidden_tag() }}
-        <div class="row ms-1">
-            <div class="form-floating col-md-3 p-0"> <!-- Adjust the column width as needed -->
-                {{ form.insuranceStatus(class="form-select", id="insuranceStatus") }}
-                {{ form.insuranceStatus.label(for="insuranceStatus") }}
-            </div>
-            <div class="col-md-3 mt-2"> <!-- Adjust the column width as needed -->
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
+        <div class="form-floating me-2 align-self-center"> <!-- Adjust the column width as needed -->
+            {{ form.insuranceStatus(class="form-select", id="insuranceStatus") }}
+            {{ form.insuranceStatus.label(for="insuranceStatus") }}
         </div>
+        {{ form.submit(class="btn btn-primary align-self-center", id="submit") }}
     </form>
-    
+    <a href="{{ url_for('insurances.make_insurance') }}" class="btn btn-primary align-self-center m-1" id="makeInsurance">Register Insurance</a>
+</div>
 
-    <table class = "table"> <!--ikke slett-->
-        <thead id="thead">
-            <tr>
-                <th style="font-size: 18px;">Name</th>
-                <th style="font-size: 18px;">Unit type</th>
-                <th style="font-size: 18px;">Value(kr)</th> 
-                <th style="font-size: 18px;">Price(kr)</th> 
-                <th style="font-size: 18px;">Due date</th> 
-                <th style="font-size: 18px;">Company</th> 
-            </tr>
-        </thead>
 
-        <tbody id="tbody">
-            {% for insurance in insurances %}
-            <tr>
-                <td>{{ insurance.label }}</td>
-                <td>{{ insurance.unit_type.name }}</td>
-                <td>{{ insurance.value }}</td>
-                <td>{{ insurance.price }}</td>
-                <td>{{ insurance.due_date }}</td>
-                <td>{{ insurance.company.name }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<table class = "table"> <!--ikke slett-->
+    <thead id="thead">
+        <tr>
+            <th style="font-size: 18px;">Name</th>
+            <th style="font-size: 18px;">Unit type</th>
+            <th style="font-size: 18px;">Value(kr)</th> 
+            <th style="font-size: 18px;">Price(kr)</th> 
+            <th style="font-size: 18px;">Due date</th> 
+            <th style="font-size: 18px;">Company</th> 
+        </tr>
+    </thead>
+
+    <tbody id="tbody">
+        {% for insurance in insurances %}
+        <tr>
+            <td>{{ insurance.label }}</td>
+            <td>{{ insurance.unit_type.name }}</td>
+            <td>{{ insurance.value }}</td>
+            <td>{{ insurance.price }}</td>
+            <td>{{ insurance.due_date }}</td>
+            <td>{{ insurance.company.name }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

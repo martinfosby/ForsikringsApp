@@ -4,42 +4,35 @@
 
 {% block content %}
     <div class="container">
-        <h2>Register Insurance</h2>
+        <h1 class="text-center">Register Insurance</h1>
         <form method="POST" action="{{ url_for('.make_insurance') }}" class="mt-4">
             {{ form.hidden_tag() }}
             <div class="mb-3">
-                {{ form.label.label(class="form-label") | escape }}
-                {{ form.label(class="form-control", id="label") | escape }}
+                {{ form.label.label(class="form-label") }}
+                {{ form.label(class="form-control", id="label") }}
             </div>
             <div class="mb-3">
-                {{ form.unit_type_id.label(class="form-label") | escape }}
-                {{ form.unit_type_id(class="form-select", id="unit_type_id") | escape }}
+                {{ form.unit_type_id.label(class="form-label") }}
+                {{ form.unit_type_id(class="form-select", id="unit_type_id") }}
             </div>
             <div class="mb-3">
-                {{ form.value.label(class="form-label") | escape }}
-                {{ form.value(class="form-control", id="value") | escape }}
+                {{ form.value.label(class="form-label") }}
+                {{ form.value(class="form-control", id="value") }}
             </div>
             <div class="mb-3">
-                {{ form.price.label(class="form-label") | escape }}
-                {{ form.price(class="form-control", id="price") | escape }}
+                {{ form.price.label(class="form-label") }}
+                {{ form.price(class="form-control", id="price") }}
             </div>
             <div class="mb-3">
-                {{ form.due_date.label(class="form-label") | escape }}
-                {{ form.due_date(class="form-control", id="due_date") | escape }}
+                {{ form.due_date.label(class="form-label") }}
+                {{ form.due_date(class="form-control", id="due_date") }}
             </div>
             <div class="mb-3">
                 {{ form.company_id.label(class="form-label") }}
                 {{ form.company_id(class="form-select", id="company_id") }}
             </div>
             
-            <div class="mb-3">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-
-
-
-            
-
+            {{ form.submit(class="btn btn-primary mb-3") }}
         </form>
     </div>
 {% endblock %}
