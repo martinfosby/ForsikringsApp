@@ -16,27 +16,31 @@
         </div>
     </form>
     
-    
-    
 
     <table class = "table"> <!--ikke slett-->
-        <tr>
-            <th style="font-size: 18px;">Name</th>
-            <th style="font-size: 18px;">Value(kr)</th> 
-            <th style="font-size: 18px;">Price(kr)</th> 
-            <th style="font-size: 18px;">Due date</th> 
-            <th style="font-size: 18px;">Company</th> 
-        </tr>
+        <thead id="thead">
+            <tr>
+                <th style="font-size: 18px;">Name</th>
+                <th style="font-size: 18px;">Unit type</th>
+                <th style="font-size: 18px;">Value(kr)</th> 
+                <th style="font-size: 18px;">Price(kr)</th> 
+                <th style="font-size: 18px;">Due date</th> 
+                <th style="font-size: 18px;">Company</th> 
+            </tr>
+        </thead>
 
-        {% for insurance in insurances %}
+        <tbody id="tbody">
+            {% for insurance in insurances %}
             <tr>
                 <td>{{ insurance.label }}</td>
+                <td>{{ insurance.unit_type.name }}</td>
                 <td>{{ insurance.value }}</td>
                 <td>{{ insurance.price }}</td>
                 <td>{{ insurance.due_date }}</td>
                 <td>{{ insurance.company.name }}</td>
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 
 {% endblock %}
