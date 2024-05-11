@@ -1,6 +1,5 @@
 from flask import Flask
-from app import models # ikke fjern
-from config import ProductionConfig, DevelopmentConfig, TestingConfig
+from config import ProductionConfig, DevelopmentConfig
 
 def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
@@ -17,6 +16,7 @@ def create_app(config_class=ProductionConfig):
     with app.app_context():
         try:
             # Create all tables
+            from app import models # ikke fjern
             db.create_all()
             app.logger.info("Database created successfully.")
         except Exception as e:

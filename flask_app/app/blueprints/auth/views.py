@@ -11,6 +11,7 @@ from app.blueprints.auth.forms.delete_form import DeleteForm
 from .forms.change_password_form import ChangePasswordForm
 from .forms.change_username_form import ChangeUsernameForm
 from app.blueprints.auth.login_manager import load_user
+from sqlalchemy.exc import IntegrityError
 
 
 @bp.route("/users")
@@ -43,10 +44,24 @@ def register():
         try:
             db.session.add(user)
             db.session.commit()
+            current_app.logger.info(f"User {username} created")
             login_user(user)
             flash(f"User {user.username} created", category="success")
+        except IntegrityError as ie:
+            db.session.rollback()
+            mysql_error_code = ie.orig.args[0]
+            if mysql_error_code == 1062:  # MySQL error code for duplicate entry
+                flash(f"User {user.username} already exists", category="danger")
+                current_app.logger.error(f"User {username} already exists {ie}")
+            else:
+                flash("An error occurred while processing the request", category="danger")
+                current_app.logger.error(f"Error creating user: {ie}")
+            return redirect(url_for(".register"))
         except Exception as e:
-            flash(f"Could not register user, error: {e}", category="danger")
+            flash(f"Error creating user: {e}", category="danger")
+            current_app.logger.error(f"Error creating user: {e}")
+            return redirect(url_for(".register"))
+
 
         return redirect(url_for('main.index')) 
 
@@ -62,18 +77,31 @@ def login():
         password = form.password.data
         remember_me = form.remember_me.data
         user = db.session.query(Customer).filter_by(username=username).first()
+        
         # Check if the user exists and the password is correct
         if user and check_password_hash(user.password_hash, password):
             login_user(user, remember=remember_me)
             current_app.logger.info(f"User {username} logged in")
-            flash('Logged in successfully.', category='success')
+            flash(f'Logged in successfully as {username}', category='success')
 
             # check if next url is safe
-            next = session['next']
-            if not url_has_allowed_host_and_scheme(next, request.host_url):
-                return abort(400)
+            try:
+                next = session['next']
+                if not url_has_allowed_host_and_scheme(next, request.host_url):
+                    return abort(400)
 
-            return redirect(next or url_for('main.index'))
+                return redirect(next or url_for('main.index'))
+            except KeyError:
+                current_app.logger.info('No next url in session')
+                return redirect(url_for('main.index'))
+        elif user and not check_password_hash(user.password_hash, password):
+            current_app.logger.info('Invalid password')
+            flash('Invalid password', category='danger')
+            return redirect(url_for(".login"))
+        elif not user:
+            current_app.logger.info('Invalid username')
+            flash('Invalid username', category='danger')
+            return redirect(url_for(".login"))
         else:
             current_app.logger.info('Invalid username or password')
             flash('Invalid username or password', category='danger')
