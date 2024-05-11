@@ -9,7 +9,7 @@
             "type": "debugpy",
             "request": "launch",
             "module": "flask",
-            "cwd": "${workspaceFolder}/flask_app",
+            "cwd": "${workspaceFolder}/flask_app/",
             "env": {
                 "FLASK_APP": "app",
                 "FLASK_DEBUG": "1"

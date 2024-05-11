@@ -1,10 +1,7 @@
-from sys import exc_info
-from flask import session
-import pytest
-from sqlalchemy.exc import IntegrityError
 from app.models import Customer
 from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from res import string_resource
 
 def create_user(username, password, is_admin=False):
     hashed_password = generate_password_hash("testpassword")
@@ -17,6 +14,14 @@ def create_user(username, password, is_admin=False):
     # Commit the changes to the database
     db.session.commit()
 
+# Helper function to create a user and log them in
+def login_user(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword")        
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    return response
+
 def test_home_page_redirect(client):
     response = client.get("/")
     assert response.status_code == 302
@@ -26,21 +31,21 @@ def test_register_page_render(client):
     response = client.get("/register")
     assert response.status_code == 200
 
-    assert b"Register" in response.data
+    assert string_resource("register").encode() in response.data
 
-    assert b"Username" in response.data
+    assert string_resource("username").encode() in response.data
 
-    assert b"Password" in response.data
+    assert string_resource("password").encode() in response.data
 
 def test_login_page_render(client):
     response = client.get("/login")
     assert response.status_code == 200
 
-    assert b"Login" in response.data
+    assert string_resource("login").encode() in response.data
 
-    assert b"Username" in response.data
+    assert string_resource("username").encode() in response.data
 
-    assert b"Password" in response.data
+    assert string_resource("password").encode() in response.data
 
 def test_register(client):
     response = client.post("/register", data={"username": "testuser", "password": "testpassword"})
@@ -53,7 +58,7 @@ def test_register_valid_form(client, app):
     response = client.post("/register", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
 
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"User testuser created" in response.data
+    assert string_resource("register_success", username="testuser").encode() in response.data
 
     # Optionally, assert that the user exists in the database
     with app.app_context():
@@ -90,7 +95,7 @@ def test_login_valid_form(client, app):
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
 
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
+    assert string_resource("login_success", username="testuser").encode() in response.data
 
     # get the current user from session
     with client.session_transaction() as session:
@@ -103,7 +108,7 @@ def test_login_invalid_password(client, app):
     response = client.post("/login", data={"username": "testuser", "password": "wrongpassword"}, follow_redirects=True)
 
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Invalid password" in response.data
+    assert string_resource("invalid_password").encode() in response.data
 
 def test_login_invalid_username(client, app):
     with app.app_context():
@@ -111,28 +116,26 @@ def test_login_invalid_username(client, app):
     response = client.post("/login", data={"username": "wronguser", "password": "wrongpassword"}, follow_redirects=True)
 
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Invalid username" in response.data
+    assert string_resource("invalid_username").encode() in response.data
 
 
 
-def test_logout(client, app):
+def test_logout_success(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
+    assert string_resource("login_success", username="testuser").encode() in response.data
 
     response = client.get("/logout", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged out successfully" in response.data
+    assert string_resource("logout_success", username="testuser").encode() in response.data
 
 
 def test_make_insurance(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
-    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
 
     response = client.get("/make/insurance", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
@@ -146,8 +149,6 @@ def test_make_offer(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
-    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
 
     response = client.get("/make/offer", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
@@ -161,28 +162,24 @@ def test_details(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
-    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
 
     response = client.get("/detail", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Detail" in response.data
+    assert string_resource("detail").encode() in response.data
 
 
 def test_delete(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
-    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
 
     response = client.get("/delete", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Delete" in response.data
+    assert string_resource("delete").encode() in response.data
 
     response = client.post("/delete", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Deleted account testuser" in response.data
+    assert string_resource("deleted_account", username="testuser").encode() in response.data
 
     with app.app_context():
         assert not db.session.query(Customer).filter_by(username="testuser").first()
@@ -192,16 +189,14 @@ def test_change_password(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
-    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
 
     response = client.get("/change/password", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Change password" in response.data
+    assert string_resource("change_password_title").encode() in response.data
 
     response = client.post("/change/password", data={"current_password": "testpassword", "new_password": "newpassword"}, follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Password changed successfully" in response.data
+    assert string_resource("password_changed").encode() in response.data
 
     with app.app_context():
         password_hash=check_password_hash(db.session.query(Customer).filter_by(username="testuser")
@@ -213,9 +208,7 @@ def test_offers_list(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
-    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Logged in successfully as testuser" in response.data
 
     response = client.get("/offers", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Offers" in response.data
+    assert string_resource("offers_list").encode() in response.data
