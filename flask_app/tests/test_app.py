@@ -127,6 +127,21 @@ def test_logout(client, app):
     assert b"Logged out successfully" in response.data
 
 
+def test_make_insurance(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword")        
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert b"Logged in successfully as testuser" in response.data
+
+    response = client.get("/make/insurance", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert b"Register Offer" in response.data
+
+    response = client.post("/make/insurance", data={"label": "Test Offer", "price": "100", "company_id": "1", "insurance_id": "1"}, follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert b"Insurance created" in response.data
+
 def test_make_offer(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
@@ -136,7 +151,11 @@ def test_make_offer(client, app):
 
     response = client.get("/make/offer", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Offer" in response.data
+    assert b"Register Offer" in response.data
+
+    response = client.post("/make/offer", data={"label": "Test Offer", "price": "100", "company_id": "1", "insurance_id": "1"}, follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert b"Offer created" in response.data
 
 def test_details(client, app):
     with app.app_context():
@@ -188,3 +207,15 @@ def test_change_password(client, app):
         password_hash=check_password_hash(db.session.query(Customer).filter_by(username="testuser")
                                             .first().password_hash, "newpassword")
         assert password_hash
+
+
+def test_offers_list(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword")        
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert b"Logged in successfully as testuser" in response.data
+
+    response = client.get("/offers", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert b"Offers" in response.data
