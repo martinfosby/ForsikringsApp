@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}{{title}}{% endblock %}
+
 {% block content %}
-<h1 class="text-center">Insurances</h1>
+<h1 class="text-center">{{title}}</h1>
 
 <div class="d-flex flex-row justify-content-between">
     <form method="POST" action="{{ url_for('insurances.insurances_list') }}" class="form d-flex flex-row m-1">

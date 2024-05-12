@@ -238,7 +238,7 @@ def test_offers_list(client, app):
 
     response = client.get("/offers", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert string_resource("offers_list").encode() in response.data
+    assert string_resource("offers_list_title").encode() in response.data
 
     assert b"Test Offer" in response.data
 
@@ -253,7 +253,7 @@ def test_settlement_list(client, app):
 
     response = client.get("/settlements", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert string_resource("settlement_list").encode() in response.data
+    assert string_resource("settlements_list_title").encode() in response.data
 
     assert b"Test Description" in response.data
 
@@ -266,6 +266,31 @@ def test_insurance_list(client, app):
 
     response = client.get("/insurances", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert string_resource("insurance_list").encode() in response.data
+    assert string_resource("insurances_list_title").encode() in response.data
 
     assert b"Test Insurance" in response.data
+
+
+def test_company_list(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword", is_admin=True)
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    response = client.post("/make/company", data={"name": "Test Company"}, follow_redirects=True)
+
+    response = client.get("/companies", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert string_resource("companies_list_title").encode() in response.data
+
+    assert b"Test Company" in response.data
+
+def test_contact_list(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword", is_admin=True)
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    response = client.post("/make/contact", data={"company": "1", "name": "Test Name", "phone_number": 553535353, "email": "Test Email"}, follow_redirects=True)
+
+    response = client.get("/contacts", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert string_resource("contacts_list_title").encode() in response.data
+
+    assert b"Test Name" in response.data

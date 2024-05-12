@@ -3,13 +3,35 @@
 {% block content %}
 {% if current_user.is_authenticated %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <h1 class="mt-5">Hi, {{ current_user.username }}!</h1>
+    <h1 class="mt-5 text-center">Hi {{ current_user.username }}!</h1>
+    <h3 class="mt-3 text-center">What do you want to do today?</h3>
+    <div class="row ms-auto">
+        <div class="col-md-4">
+            <h4 class="text-center">Actions</h4>
             <div class="list-group mt-3">
                 <a href="{{ url_for('insurances.make_insurance') }}" class="list-group-item list-group-item-action">Make New Insurance</a>
                 <a href="{{ url_for('settlements.make_settlement') }}" class="list-group-item list-group-item-action">Make New Settlement</a>
                 <a href="{{ url_for('offers.make_offer') }}" class="list-group-item list-group-item-action">Make New Offer</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            {% if current_user.is_admin %}
+            <h4 class="text-center">Admin</h4>
+                <div class="list-group mt-3">
+                    <a href="{{ url_for('companies.make_company') }}" class="list-group-item list-group-item-action">Make New Company</a>
+                    <a href="{{ url_for('contacts.make_contact') }}" class="list-group-item list-group-item-action">Make New Contact</a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h4 class="text-center">Lists</h4>
+            <div class="list-group mt-3">
+                <a href="{{ url_for('insurances.insurances_list') }}" class="list-group-item list-group-item-action">Insurances List</a>
+                <a href="{{ url_for('settlements.settlement_list') }}" class="list-group-item list-group-item-action">Settlements List</a>
+                <a href="{{ url_for('offers.offers_list') }}" class="list-group-item list-group-item-action">Offers List</a>
+                <a href="{{ url_for('companies.companies_list') }}" class="list-group-item list-group-item-action">Companies List</a>
+                <a href="{{ url_for('contacts.contacts_list') }}" class="list-group-item list-group-item-action">Contacts List</a>
             </div>
         </div>
     </div>

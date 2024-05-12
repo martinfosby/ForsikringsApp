@@ -1,5 +1,5 @@
 from flask import Flask
-from config import ProductionConfig, DevelopmentConfig
+from config import ProductionConfig, DevelopmentConfig, TestingConfig
 
 def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
@@ -27,8 +27,9 @@ def create_app(config_class=ProductionConfig):
             db.reflect()
             app.logger.info("Database reflection successful.")
         
-        from app.models.data import add_data
-        add_data()
+        if config_class == DevelopmentConfig or config_class == TestingConfig:
+            from app.models.data import add_data
+            add_data()
 
     # blueprints
     from app.blueprints.main import bp as main_bp
@@ -38,6 +39,8 @@ def create_app(config_class=ProductionConfig):
     from app.blueprints.administrator import bp as administrator_bp
     from app.blueprints.api import bp as api_bp
     from app.blueprints.offers import bp as offers_bp
+    from app.blueprints.companies import bp as companies_bp
+    from app.blueprints.contacts import bp as contacts_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)
@@ -45,6 +48,8 @@ def create_app(config_class=ProductionConfig):
     app.register_blueprint(administrator_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(offers_bp)
+    app.register_blueprint(companies_bp)
+    app.register_blueprint(contacts_bp)
     
     return app
 
