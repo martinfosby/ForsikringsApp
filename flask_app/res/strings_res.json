@@ -40,6 +40,8 @@
     "make_offer_success": "Offer registered successfully!",
     "make_insurance_success": "Insurance registered successfully!",
     "make_insurance_title": "Register Insurance",
-    "make_settlement_title": "Settlement",
-    "make_settlement_success": "Settlement registered successfully!"
+    "make_settlement_title": "Register Settlement",
+    "make_settlement_success": "Settlement registered successfully!",
+    "settlement_list": "Settlements",
+    "insurance_list": "Insurances"
 }

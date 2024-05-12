@@ -233,7 +233,39 @@ def test_offers_list(client, app):
     with app.app_context():
         create_user("testuser", "testpassword")        
     response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    response = client.post("/make/insurance", data={"label": "Test Insurance", "unit_type_id": "1", "value": "575", "price": "33444", "due_date": "2025-01-01", "company_id": "1"}, follow_redirects=True)
+    response = client.post("/make/offer", data={"label": "Test Offer", "price": "100", "company_id": "1", "insurance_id": "1"}, follow_redirects=True)
 
     response = client.get("/offers", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
     assert string_resource("offers_list").encode() in response.data
+
+    assert b"Test Offer" in response.data
+
+
+
+def test_settlement_list(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword")
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    response = client.post("/make/insurance", data={"label": "Test Insurance", "unit_type_id": "1", "value": "575", "price": "33444", "due_date": "2025-01-01", "company_id": "1"}, follow_redirects=True)
+    response = client.post("/make/settlement", data={"insurance_label": "1", "description": "Test Description", "sum": "100"}, follow_redirects=True)
+
+    response = client.get("/settlements", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert string_resource("settlement_list").encode() in response.data
+
+    assert b"Test Description" in response.data
+
+
+def test_insurance_list(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword")
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    response = client.post("/make/insurance", data={"label": "Test Insurance", "unit_type_id": "1", "value": "575", "price": "33444", "due_date": "2025-01-01", "company_id": "1"}, follow_redirects=True)
+
+    response = client.get("/insurances", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert string_resource("insurance_list").encode() in response.data
+
+    assert b"Test Insurance" in response.data
