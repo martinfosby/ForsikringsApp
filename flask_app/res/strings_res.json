@@ -43,5 +43,7 @@
     "make_settlement_title": "Register Settlement",
     "make_settlement_success": "Settlement registered successfully!",
     "settlement_list": "Settlements",
-    "insurance_list": "Insurances"
+    "insurance_list": "Insurances",
+    "login_required": "You must be logged in to access this page.",
+    "login_fresh": "You need to log in again!"
 }
