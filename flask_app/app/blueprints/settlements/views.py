@@ -7,7 +7,7 @@ from sqlalchemy import asc
 from .forms import MakeSettlementForm
 
 from flask import flash, redirect, url_for
-
+from res import string_resource
 
 @bp.route('/make/settlement', methods=['GET', 'POST'])
 @login_required
@@ -20,7 +20,6 @@ def make_settlement():
     form.insurance_label.choices = [(insurance.id, insurance.label) for insurance in user_insurances] #views the registered insurances in the form of a dropdown menu
 
     if form.validate_on_submit():
-
         new_settlement = Settlement(
             insurance_id=form.insurance_label.data,
             description=form.description.data,
@@ -28,7 +27,7 @@ def make_settlement():
         )
         db.session.add(new_settlement)
         db.session.commit()
-        flash('Settlement registered successfully!', 'success')
+        flash(string_resource('make_settlement_success'), 'success')
         return redirect(url_for('main.index'))
 
 

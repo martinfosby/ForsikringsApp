@@ -18,6 +18,7 @@ def create_app(config_class=ProductionConfig):
             # Create all tables
             from app import models # ikke fjern
             db.create_all()
+            
             app.logger.info("Database created successfully.")
         except Exception as e:
             # If reflection fails, it means the database doesn't exist
@@ -25,7 +26,9 @@ def create_app(config_class=ProductionConfig):
             # Try to reflect the database schema
             db.reflect()
             app.logger.info("Database reflection successful.")
-
+        
+        from app.models.data import add_data
+        add_data()
 
     # blueprints
     from app.blueprints.main import bp as main_bp

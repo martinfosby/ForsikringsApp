@@ -1,19 +1,18 @@
-from flask import redirect, render_template, url_for
+from flask import redirect, render_template, url_for, flash, redirect
 from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance, UnitType
 from flask_login import current_user, login_required
+
+from res import string_resource
 from .forms import DropDownForm, MakeInsuranceForm
 from datetime import date
 
 
-
-from flask import flash, redirect, url_for
-
 @bp.route('/make/insurance', methods=['GET', 'POST'])
 @login_required
 def make_insurance():
-    form = MakeInsuranceForm()
+    form: MakeInsuranceForm = MakeInsuranceForm()
     form.unit_type_id.choices = [(u.id, u.name) for u in UnitType.query.all()]
     form.company_id.choices = [(c.id, c.name) for c in Company.query.all()]
     if form.validate_on_submit():  # Checks if the form is submitted and the data is valid
@@ -34,7 +33,7 @@ def make_insurance():
         db.session.add(new_insurance)
         db.session.commit()
 
-        flash('Insurance registered successfully!', 'success')
+        flash(string_resource('make_insurance_success'), 'success')
         return redirect(url_for('main.index'))  # Redirect to a new page after form submission
     
     companies = db.session.execute(db.select(Company)).all()

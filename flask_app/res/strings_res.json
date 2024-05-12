@@ -35,5 +35,11 @@
     "create_user_success": "User {username} created",
     "creating_user_error": "Error creating user",
     "creating_user_error_with_error": "Error creating user {error}",
-    "offers_list": "Offers"
+    "offers_list": "Offers",
+    "make_offer_title": "Register Offer",
+    "make_offer_success": "Offer registered successfully!",
+    "make_insurance_success": "Insurance registered successfully!",
+    "make_insurance_title": "Register Insurance",
+    "make_settlement_title": "Settlement",
+    "make_settlement_success": "Settlement registered successfully!"
 }

@@ -1,4 +1,4 @@
-from app.models import Customer
+from app.models import Customer, Insurance, Settlement
 from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from res import string_resource
@@ -139,11 +139,15 @@ def test_make_insurance(client, app):
 
     response = client.get("/make/insurance", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Register Offer" in response.data
+    assert string_resource("make_insurance_title").encode() in response.data
 
-    response = client.post("/make/insurance", data={"label": "Test Offer", "price": "100", "company_id": "1", "insurance_id": "1"}, follow_redirects=True)
+    response = client.post("/make/insurance", data={"label": "Test Insurance", "unit_type_id": "1", "value": "575", "price": "33444", "due_date": "2025-01-01", "company_id": "1"}, follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Insurance created" in response.data
+
+    with app.app_context():
+        insurance = Insurance.query.filter_by().first()
+    assert insurance
+    assert string_resource("make_insurance_success").encode() in response.data
 
 def test_make_offer(client, app):
     with app.app_context():
@@ -152,11 +156,32 @@ def test_make_offer(client, app):
 
     response = client.get("/make/offer", follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Register Offer" in response.data
+    assert string_resource("make_offer_title").encode() in response.data
+
+    response = client.post("/make/insurance", data={"label": "Test Insurance", "unit_type_id": "1", "value": "575", "price": "33444", "due_date": "2025-01-01", "company_id": "1"}, follow_redirects=True)
 
     response = client.post("/make/offer", data={"label": "Test Offer", "price": "100", "company_id": "1", "insurance_id": "1"}, follow_redirects=True)
     assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
-    assert b"Offer created" in response.data
+    assert string_resource("make_offer_success").encode() in response.data
+
+
+def test_make_settlement(client, app):
+    with app.app_context():
+        create_user("testuser", "testpassword")        
+    response = client.post("/login", data={"username": "testuser", "password": "testpassword"}, follow_redirects=True)
+    response = client.post("/make/insurance", data={"label": "Test Insurance", "unit_type_id": "1", "value": "575", "price": "33444", "due_date": "2025-01-01", "company_id": "1"}, follow_redirects=True)
+
+    response = client.get("/make/settlement", follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert string_resource("make_settlement_title").encode() in response.data
+
+    response = client.post("/make/settlement", data={"insurance_label": "1", "description": "Test Description", "sum": "100"}, follow_redirects=True)
+    assert response.status_code == 200  # or assert response.status_code == 302 for redirect to main.index
+    assert string_resource("make_settlement_success").encode() in response.data
+
+    with app.app_context():
+        settlement = Settlement.query.filter_by().first()
+    assert settlement
 
 def test_details(client, app):
     with app.app_context():

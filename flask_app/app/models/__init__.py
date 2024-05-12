@@ -16,7 +16,7 @@ class Customer(db.Model, UserMixin):
 class Company(db.Model):
     __tablename__ = "company"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(90))
+    name = db.Column(db.String(90), unique=True)
     contact = db.relationship('Contact', back_populates='company')
     insurance = db.relationship('Insurance', back_populates='company')
     offers = db.relationship("Offer", back_populates="company")
@@ -35,7 +35,7 @@ class Contact(db.Model):
 class UnitType(db.Model):
     __tablename__ = "unit_type"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(90))
+    name = db.Column(db.String(90), unique=True)
     insurance = db.relationship('Insurance', back_populates='unit_type')
 
 @dataclass
