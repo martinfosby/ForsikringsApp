@@ -1,4 +1,3 @@
-from turtle import title
 from flask import current_app, redirect, render_template, request, url_for, flash, redirect
 from app.blueprints.contacts import bp
 from app.extensions import db
