@@ -41,6 +41,7 @@ def create_app(config_class=ProductionConfig):
     from app.blueprints.offers import bp as offers_bp
     from app.blueprints.companies import bp as companies_bp
     from app.blueprints.contacts import bp as contacts_bp
+    from app.blueprints.unit_types import bp as unit_types_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(insurance_bp)
@@ -50,6 +51,7 @@ def create_app(config_class=ProductionConfig):
     app.register_blueprint(offers_bp)
     app.register_blueprint(companies_bp)
     app.register_blueprint(contacts_bp)
+    app.register_blueprint(unit_types_bp)
     
     return app
 

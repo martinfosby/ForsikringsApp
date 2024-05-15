@@ -1,4 +1,3 @@
-from os import error
 from flask import abort, render_template, request, redirect, session, flash,url_for, current_app
 from flask_login import fresh_login_required, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -133,7 +132,8 @@ def logout():
 def details():
     user = db.get_or_404(Customer, current_user.id)
     if current_user == user:
-        return render_template("auth/detail.html", user=user)
+        title = string_resource("user_details")
+        return render_template("auth/detail.html", user=user, title=title)
     else:
         return redirect(url_for("main.index"))
 

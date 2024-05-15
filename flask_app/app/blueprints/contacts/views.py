@@ -1,4 +1,5 @@
 from flask import current_app, redirect, render_template, request, url_for, flash, redirect
+from sqlalchemy import desc
 from app.blueprints.contacts import bp
 from app.extensions import db
 from app.models import Company, Contact
@@ -7,8 +8,6 @@ from flask_login import current_user, login_required
 from res import string_resource
 from .forms import MakeContactForm
 from sqlalchemy.exc import DataError
-
-
 
 
 @bp.route('/contacts/', defaults={'company_id': None}, methods=['GET'])
@@ -22,15 +21,22 @@ def contacts_list(company_id):
             contacts = db.session.scalars(db.select(Contact)).all()
 
         title = string_resource('contacts_list_title')
-        return render_template('contacts/contacts_list.html', contacts=contacts, title=title)
+        return render_template('contacts/contacts_list.html', contacts=contacts, title=title, company_id=company_id)
     
 
-@bp.route('/make/contact', methods=['GET', 'POST'])
+@bp.route('/make/contact/', defaults={'company_id': None}, methods=['GET', 'POST'])
+@bp.route('/make/contact/<company_id>', methods=['GET', 'POST'])
 @login_required
-def make_contact():
+def make_contact(company_id):
     if current_user.is_admin:
         form: MakeContactForm = MakeContactForm()
-        form.company.choices=[(c.id, c.name) for c in db.session.scalars(db.select(Company)).all()]
+        if company_id:
+            form.company.choices=[(c.id, c.name) for c in db.session.scalars(
+                db.select(Company).order_by(desc(Company.id==company_id))).all()
+                ]
+        else:
+            form.company.choices=[(c.id, c.name) for c in db.session.scalars(db.select(Company)).all()]
+
         if form.validate_on_submit():
             new_contact = Contact(company_id=form.company.data, name=form.name.data, phone_number=form.phone_number.data, email=form.email.data)
             try:

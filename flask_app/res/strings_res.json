@@ -9,6 +9,7 @@
     "change_password_title": "Change password",
     "admin": "Admin",
     "detail": "Detail",
+    "user_details": "User Details",
     "delete": "Delete",
     "create_new_user": "Create new user",
     "password_changed": "Password changed successfully",
@@ -57,5 +58,8 @@
     "contacts_list_title": "Contacts",
     "companies_list_title": "Companies",
     "settlements_list_title": "Settlements",
-    "insurances_list_title": "Insurances"
+    "insurances_list_title": "Insurances",
+    "unit_types_list_title": "Unit Types",
+    "make_unit_type_title": "Register Unit Type",
+    "make_unit_type_success": "Unit type registered successfully!"
 }

@@ -21,6 +21,7 @@
                 <div class="list-group mt-3">
                     <a href="{{ url_for('companies.make_company') }}" class="list-group-item list-group-item-action">Make New Company</a>
                     <a href="{{ url_for('contacts.make_contact') }}" class="list-group-item list-group-item-action">Make New Contact</a>
+                    <a href="{{ url_for('unit_types.make_unit_type') }}" class="list-group-item list-group-item-action">Make New Unit Type</a>
                 </div>
             {% endif %}
         </div>
@@ -32,6 +33,7 @@
                 <a href="{{ url_for('offers.offers_list') }}" class="list-group-item list-group-item-action">Offers List</a>
                 <a href="{{ url_for('companies.companies_list') }}" class="list-group-item list-group-item-action">Companies List</a>
                 <a href="{{ url_for('contacts.contacts_list') }}" class="list-group-item list-group-item-action">Contacts List</a>
+                <a href="{{ url_for('unit_types.unit_types_list') }}" class="list-group-item list-group-item-action">Unit Types List</a>
             </div>
         </div>
     </div>

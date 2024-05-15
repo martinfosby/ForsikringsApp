@@ -4,6 +4,9 @@
 
 {% block content %}
     <h1 class="text-center">{{title}}</h1>
+    <div class="text-center">
+        <a href="{{ url_for('companies.make_company')}}" class="btn btn-primary">Make company</a>
+    </div>
     <ul class="list-group mt-3">
         {% for company in companies %}
             <a href="{{ url_for('contacts.contacts_list', company_id=company.id) }}"><li class="list-group-item">{{ company.name }}</li></a>

@@ -4,11 +4,8 @@ from wtforms import StringField, IntegerField, SelectField, SubmitField, TelFiel
 from wtforms.validators import DataRequired, InputRequired
 
 
-class MakeContactForm(FlaskForm):
-    company = SelectField('Company')
+class MakeUnitTypeForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    phone_number = TelField('Phone number', validators=[InputRequired()])
-    email = StringField('Email', validators=[DataRequired()])
     submit = SubmitField('Register Insurance')
 
     
