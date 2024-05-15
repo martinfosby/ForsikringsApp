@@ -26,6 +26,8 @@
     "register_success": "Registered new user {username}",
     "password_invalid": "Invalid password",
     "username_invalid": "Invalid username",
+    "invalid_username": "Invalid username",
+    "invalid_password": "Invalid password",
     "password_username_invalid": "Invalid username or password",
     "no_next_url": "No next url in session",
     "username_taken": "User {username} already exists",

@@ -33,6 +33,7 @@ def make_insurance():
         try:
             db.session.add(new_insurance)
             db.session.commit()
+            current_app.logger.info(string_resource('make_insurance_success'))
             flash(string_resource('make_insurance_success'), 'success')
             return redirect(url_for('main.index'))  # Redirect to a new page after form submission
         except DataError: # if data entered is too big
@@ -43,7 +44,15 @@ def make_insurance():
             db.session.rollback()
             current_app.logger.error(string_resource('unknown_error_with_error', error=e))
             flash(string_resource('unknown_error_with_error', error=e), 'danger')
-
+    elif form.errors:
+        # Handle validation errors
+        current_app.logger.error(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                if field == 'due_date':
+                    flash(f'{"Due date"}: {error}', 'danger')
+                else:
+                    flash(f'{field}: {error}', 'danger')
     
     companies = db.session.execute(db.select(Company)).all()
     return render_template('insurances/make_insurance.html', form=form, companies=companies, title=string_resource('make_insurance_title'))
