@@ -28,6 +28,7 @@
     "username_invalid": "Invalid username",
     "invalid_username": "Invalid username",
     "invalid_password": "Invalid password",
+    "invalid_username_or_password": "Invalid username or password",
     "password_username_invalid": "Invalid username or password",
     "no_next_url": "No next url in session",
     "username_taken": "User {username} already exists",

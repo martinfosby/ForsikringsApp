@@ -106,8 +106,8 @@ def login():
             flash(string_resource("invalid_username"), category='danger')
             return redirect(url_for(".login"))
         else:
-            current_app.logger.info(string_resource("invalid_username_password"))
-            flash(string_resource("invalid_username_password"), category='danger')
+            current_app.logger.info(string_resource("invalid_username_or_password"))
+            flash(string_resource("invalid_username_or_password"), category='danger')
             return redirect(url_for(".login"))
 
     session['next'] = request.args.get('next')
