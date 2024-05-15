@@ -18,7 +18,6 @@ def make_settlement(insurance_id):
     user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all() #filtering registered insurances for the user
 
     form.insurance_label.choices = [(insurance.id, insurance.label) for insurance in user_insurances] #views the registered insurances in the form of a dropdown menu
-    form.insurance_label.data = insurance_id if insurance_id else form.insurance_label.choices[0][0]
     insurance = db.get_or_404(Insurance, form.insurance_label.data) if insurance_id else None
 
     if form.validate_on_submit():
@@ -41,6 +40,9 @@ def make_settlement(insurance_id):
             current_app.logger.error(string_resource('unknown_error_with_error', error=e))
             flash(string_resource('unknown_error_with_error', error=e), 'danger')
 
+    else:     
+        form.insurance_label.data = insurance_id if insurance_id else form.insurance_label.choices[0][0]
+
 
     return render_template('settlements/make_settlement.html', 
                            form=form, 
@@ -50,11 +52,11 @@ def make_settlement(insurance_id):
 
 
 @bp.route('/settlements', defaults={'insurance_id': None}, methods=['GET', 'POST'])
-@bp.route('/settlements/<insurance_id>', methods=['GET'])
+@bp.route('/settlements/<insurance_id>', methods=['GET', 'POST'])
 @login_required
 def settlement_list(insurance_id):
     form: DropDownInsuranceForm = DropDownInsuranceForm()
-    if insurance_id and insurance_id != 'all':
+    if insurance_id:
         form.settlementStatus.choices.extend((insurance.id, insurance.label) for insurance in db.session.scalars(
             db.select(Insurance)
             .where(Insurance.customer_id == current_user.id)
@@ -73,7 +75,6 @@ def settlement_list(insurance_id):
             db.select(Insurance)
             .where(Insurance.customer_id == current_user.id)).all())
 
-
         settlements = db.session.scalars(db.select(Settlement).join(Settlement.insurance)
                                          .where(Insurance.customer_id == current_user.id)
                                          .order_by(asc(Settlement.id))).all()
@@ -82,7 +83,10 @@ def settlement_list(insurance_id):
         insurance = None
     
     if form.validate_on_submit():
-        return redirect(url_for('settlements.settlement_list', insurance_id=form.settlementStatus.data))
+        if form.settlementStatus.data == 'all':
+            return redirect(url_for('settlements.settlement_list'))
+        else:
+            return redirect(url_for('settlements.settlement_list', insurance_id=form.settlementStatus.data))
     
     return render_template(
         'settlements/settlements_list.html', 

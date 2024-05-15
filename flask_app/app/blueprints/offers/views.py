@@ -1,40 +1,65 @@
 from flask import current_app, redirect, render_template, request, url_for, flash
-from app.blueprints.offers import bp
+from . import bp
 from app.extensions import db
 from app.models import Company, Insurance, Offer
 from flask_login import current_user, login_required
+from .forms import DropDownForm
 from res import string_resource
 from .forms import DeleteOfferForm, MakeOfferForm
 from sqlalchemy.exc import DataError
+import random
 
 
 @bp.route('/offers', defaults={'insurance_id': None}, methods=['GET', 'POST'])
 @bp.route('/offers/<insurance_id>', methods=['GET', 'POST'])
 @login_required
 def offers_list(insurance_id):
+    form: DropDownForm = DropDownForm()
+    form.offerStatus.choices.extend([(insurance.id, insurance.label) for insurance in db.session.scalars(db.select(Insurance).where(Insurance.customer_id == current_user.id)).all()])
+
     if insurance_id:
         # Retrieve insurance records belonging to the current user
         insurance = db.get_or_404(Insurance, insurance_id)
         offers = db.session.scalars(db.select(Offer).join(Offer.insurance).where(Offer.insurance_id == insurance_id and Insurance.customer_id == current_user.id)).all()
+        form.offerStatus.data = insurance_id
     else:
         # Retrieve offers only related to the user's insurance records
         insurance = None
         offers = db.session.scalars(db.select(Offer).join(Offer.insurance).where(Insurance.customer_id == current_user.id)).all()
 
-    return render_template('offers/offers_list.html', offers=offers, title=string_resource('offers_list_title'), insurance=insurance)
+
+    if form.validate_on_submit():
+        if form.offerStatus.data == 'all':
+            return redirect(url_for('offers.offers_list'))
+        else:
+            return redirect(url_for('offers.offers_list', insurance_id=form.offerStatus.data))
+
+    return render_template('offers/offers_list.html', form=form, offers=offers, title=string_resource('offers_list_title'), insurance=insurance)
 
 
 
-@bp.route('/make/offer/', methods=['GET', 'POST'])
+@bp.route('/make/offer/', defaults={'insurance_id': None}, methods=['GET', 'POST'])
+@bp.route('/make/offer/<insurance_id>', methods=['GET', 'POST'])
 @login_required
-def make_offer():
-    form = MakeOfferForm()
+def make_offer(insurance_id):
+    form: MakeOfferForm = MakeOfferForm()
     
     # Populate the dropdowns with data
     form.company_id.choices = [(company.id, company.name) for company in Company.query.all()]
     form.insurance_id.choices = [
         (insurance.id, insurance.label) for insurance in Insurance.query.filter_by(customer_id=current_user.id).all()
     ]
+    form.company_id.data = str(random.choice(form.company_id.choices)[0])
+
+    if insurance_id:
+        form.insurance_id.data = insurance_id
+        insurance = db.get_or_404(Insurance, insurance_id)
+    else:
+        try:
+            form.insurance_id.data = str(random.choice(form.insurance_id.choices)[0])
+        except IndexError:
+            form.insurance_id.data = None
+        insurance = None
 
     if form.validate_on_submit():
         # Process the form data and save the offer
@@ -58,7 +83,7 @@ def make_offer():
             current_app.logger.error(string_resource('unknown_error_with_error', error=e))
             flash(string_resource('unknown_error_with_error', error=e), 'danger')
 
-    return render_template('offers/register_offer.html', form=form, title=string_resource('make_offer_title'))
+    return render_template('offers/register_offer.html', form=form, title=string_resource('make_offer_title'), insurance=insurance)
 
 
 

@@ -8,18 +8,34 @@
 {% else %}
 <h1 class="text-center">{{title}}</h1>
 {% endif %}
-    <div class="text-center me-1">
-        <a href="{{ url_for('offers.make_offer') }}" class="btn btn-primary">Register Offer</a>
+    <div class="d-flex flex-row justify-content-between">
+        <form method="POST" action="{{ url_for('offers.offers_list') }}" class="form d-flex flex-row m-1">
+            {{ form.hidden_tag() }}
+            <div class="form-floating me-2 align-self-center"> <!-- Adjust the column width as needed -->
+                {{ form.offerStatus(class="form-select", id="offerStatus") }}
+                {{ form.offerStatus.label(for="offerStatus") }}
+            </div>
+            {{ form.submit(class="btn btn-primary align-self-center") }}
+        </form>
+        {% if insurance %}
+        <a href="{{ url_for('offers.make_offer', insurance_id=insurance.id) }}" class="btn btn-primary align-self-center m-1" id="makeOffer">Register Offer</a>
+        {% else %}
+        <a href="{{ url_for('offers.make_offer') }}" class="btn btn-primary align-self-center m-1" id="makeOffer">Register Offer</a>
+        {% endif %}
     </div>
+
     <table class="table">
-        <tr>
-            <th style="font-size: 18px;">Label</th>
-            <th style="font-size: 18px;">Actions</th>
-            <th style="font-size: 18px;">Price (kr)</th>
-            <th style="font-size: 18px;">Insurance</th>
-            <th style="font-size: 18px;">Company</th>
-        </tr>
+        <thead>
+            <tr>
+                <th style="font-size: 18px;">Label</th>
+                <th style="font-size: 18px;">Actions</th>
+                <th style="font-size: 18px;">Price (kr)</th>
+                <th style="font-size: 18px;">Insurance</th>
+                <th style="font-size: 18px;">Company</th>
+            </tr>
+        </thead>
         {% for offer in offers %}
+        <tbody>
             <tr>
                 <td>{{ offer.label }}</td>
                 <td>
@@ -29,6 +45,7 @@
                 <td>{{ offer.insurance.label }}</td> <!-- Fetching related insurance details -->
                 <td>{{ offer.company.name }}</td> <!-- Fetching related company details -->
             </tr>
+        </tbody>
         {% endfor %}
     </table>
 {% endblock %}
