@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 
+{% block title %}{{title}}{% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Settlements</h1>
+    <h1 class="text-center">{{title}}</h1>
     <div class="text-end me-1">
         <a href="{{ url_for('settlements.make_settlement') }}" class="btn btn-primary">Register Settlement</a>
     </div>

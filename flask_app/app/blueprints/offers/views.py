@@ -1,10 +1,12 @@
-from flask import redirect, render_template, url_for
+from flask import current_app, redirect, render_template, url_for, flash
 from app.blueprints.offers import bp
 from app.extensions import db
 from app.models import Company, Insurance, Offer
 from flask_login import current_user, login_required
+
+from res import string_resource
 from .forms import MakeOfferForm
-from flask import flash, redirect, url_for
+from sqlalchemy.exc import DataError
 
 
 @bp.route('/offers', methods=['GET', 'POST'])
@@ -16,7 +18,7 @@ def offers_list():
     # Retrieve offers only related to the user's insurance records
     offers = Offer.query.filter(Offer.insurance_id.in_(insurance_ids)).all()
 
-    return render_template('offers/offers_list.html', offers=offers)
+    return render_template('offers/offers_list.html', offers=offers, title=string_resource('offers_list_title'))
 
 
 
@@ -39,9 +41,18 @@ def make_offer():
             company_id=form.company_id.data,
             insurance_id=form.insurance_id.data
         )
-        db.session.add(offer)
-        db.session.commit()
-        flash('Offer registered successfully!', 'success')
-        return redirect(url_for('offers.offers_list'))
+        try:
+            db.session.add(offer)
+            db.session.commit()
+            flash(string_resource("make_offer_success"), 'success')
+            return redirect(url_for('offers.offers_list'))
+        except DataError: # if data entered is too big
+            db.session.rollback()
+            current_app.logger.error(string_resource('dataerror'))
+            flash(string_resource('dataerror'), 'danger')
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(string_resource('unknown_error_with_error', error=e))
+            flash(string_resource('unknown_error_with_error', error=e), 'danger')
 
-    return render_template('offers/register_offer.html', form=form)
+    return render_template('offers/register_offer.html', form=form, title=string_resource('make_offer_title'))

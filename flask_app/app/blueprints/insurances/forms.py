@@ -7,7 +7,6 @@ from wtforms.validators import DataRequired, InputRequired
 class MakeInsuranceForm(FlaskForm):
     label = StringField('Label', validators=[DataRequired()])
     unit_type_id = SelectField('Unit Type', coerce=int)
-    customer_id = "test"
     value = IntegerField('Value', validators=[InputRequired()])
     price = IntegerField('Price', validators=[InputRequired()])
     due_date = DateField('Due Date', validators=[DataRequired()])
