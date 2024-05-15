@@ -21,3 +21,6 @@ class DropDownForm(FlaskForm):
     )
     submit = SubmitField('Filter')
     
+
+class DeleteInsuranceForm(FlaskForm):
+    submit = SubmitField('Delete Insurance')

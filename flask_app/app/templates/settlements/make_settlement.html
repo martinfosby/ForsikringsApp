@@ -4,7 +4,11 @@
 
 {% block content %}
     <div class="container">
+        {% if insurance %}
+        <h1 class="text-center">{{title}} for {{insurance.label}}</h1>
+        {% else %}
         <h1 class="text-center">{{title}}</h1>
+        {% endif %}
         <form method="POST" action="{{ url_for('.make_settlement') }}" class="mt-4">
             {{ form.hidden_tag() }}
 

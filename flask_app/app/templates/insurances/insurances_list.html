@@ -22,6 +22,8 @@
     <thead id="thead">
         <tr>
             <th style="font-size: 18px;">Name</th>
+            <th style="font-size: 18px;">Coverage</th>
+            <th style="font-size: 18px;">Actions</th>
             <th style="font-size: 18px;">Unit type</th>
             <th style="font-size: 18px;">Value(kr)</th> 
             <th style="font-size: 18px;">Price(kr)</th> 
@@ -34,6 +36,12 @@
         {% for insurance in insurances %}
         <tr>
             <td>{{ insurance.label }}</td>
+            <td>{% if insurance.price > 0 and insurance.due_date > current_date %}Insured{% else %}Uninsured{% endif %}</td>
+            <td>
+                <a href="{{ url_for('settlements.settlement_list', insurance_id=insurance.id) }}" class="btn btn-primary">Settlements</a>
+                <a href="{{ url_for('offers.offers_list', insurance_id=insurance.id) }}" class="btn btn-primary">Offers</a>
+                <a href="{{ url_for('insurances.delete_insurance', insurance_id=insurance.id) }}" class="btn btn-danger">Delete</a>
+            </td>
             <td>{{ insurance.unit_type.name }}</td>
             <td>{{ insurance.value }}</td>
             <td>{{ insurance.price }}</td>

@@ -9,3 +9,7 @@ class MakeOfferForm(FlaskForm):
     company_id = SelectField('Company', coerce=int)
     insurance_id = SelectField('Insurance', coerce=int)
     submit = SubmitField('Register Offer')
+
+
+class DeleteOfferForm(FlaskForm):
+    submit = SubmitField('Delete Offer')

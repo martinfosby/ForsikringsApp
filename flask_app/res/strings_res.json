@@ -61,5 +61,11 @@
     "insurances_list_title": "Insurances",
     "unit_types_list_title": "Unit Types",
     "make_unit_type_title": "Register Unit Type",
-    "make_unit_type_success": "Unit type registered successfully!"
+    "make_unit_type_success": "Unit type registered successfully!",
+    "delete_insurance_success": "Insurance deleted successfully!",
+    "delete_settlement_success": "Settlement deleted successfully!",
+    "delete_offer_success": "Offer deleted successfully!",
+    "delete_company_success": "Company deleted successfully!",
+    "delete_contact_success": "Contact deleted successfully!",
+    "delete_unit_type_success": "Unit type deleted successfully!"
 }

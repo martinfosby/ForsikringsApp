@@ -4,27 +4,53 @@
 {% block title %}{{title}}{% endblock %}
 
 {% block content %}
-    <h1 class="text-center">{{title}}</h1>
-    <div class="text-end me-1">
-        <a href="{{ url_for('settlements.make_settlement') }}" class="btn btn-primary">Register Settlement</a>
-    </div>
-    <table class = "table"> <!--ikke slett-->
-        <thead>
-            <tr>
-                <th style="font-size: 18px;">Insurance</th>
-                <th style="font-size: 18px;">Description</th>
-                <th style="font-size: 18px;">Sum(kr)</th>
-            </tr>
-        </thead>
+{% if insurance %}
+<h1 class="text-center">{{title}} for {{insurance.label}}</h1>
+{% else %}
+<h1 class="text-center">{{title}}</h1>
+{% endif %}
 
-        <tbody>
-            {% for settlement in settlements %}
-            <tr>
-                <td>{{ settlement.insurance.label }}</td>
-                <td>{{ settlement.description }}</td>
-                <td>{{ settlement.sum }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="d-flex flex-row justify-content-between">
+    <form method="POST" action="{{ url_for('settlements.settlement_list') }}" class="form d-flex flex-row m-1">
+        {{ form.hidden_tag() }}
+        <div class="form-floating me-2 align-self-center"> <!-- Adjust the column width as needed -->
+            {{ form.settlementStatus(class="form-select", id="settlementStatus") }}
+            {{ form.settlementStatus.label(for="settlementStatus") }}
+        </div>
+        {{ form.submit(class="btn btn-primary align-self-center") }}
+    </form>
+    {% if insurance %}
+    <a href="{{ url_for('settlements.make_settlement', insurance_id=insurance.id) }}" class="btn btn-primary align-self-center m-1" id="makeSettlement">Register Settlement</a>
+    {% else %}
+    <a href="{{ url_for('settlements.make_settlement') }}" class="btn btn-primary align-self-center m-1" id="makeSettlement">Register Settlement</a>
+    {% endif %}
+</div>
+
+<table class = "table"> <!--ikke slett-->
+    <thead>
+        <tr>
+            <th style="font-size: 18px;">Insurance</th>
+            <th style="font-size: 18px;">Actions</th>
+            <th style="font-size: 18px;">Description</th>
+            <th style="font-size: 18px;">Sum(kr)</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for settlement in settlements %}
+        <tr>
+            <td>{{ settlement.insurance.label }}</td>
+            <td>
+                <a href="{{ url_for('settlements.delete_settlement', settlement_id=settlement.id) }}" class="btn btn-danger">Delete</a>
+            </td>
+            <td>{{ settlement.description }}</td>
+            <td>{{ settlement.sum }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+
+</script>
 {% endblock %}

@@ -1,11 +1,11 @@
-from flask import current_app, redirect, render_template, url_for, flash, redirect
+from flask import current_app, redirect, render_template, request, url_for, flash, redirect
 from app.blueprints.insurances import bp
 from app.extensions import db
 from app.models import Company, Insurance, UnitType
 from flask_login import current_user, login_required
 
 from res import string_resource
-from .forms import DropDownForm, MakeInsuranceForm
+from .forms import DeleteInsuranceForm, DropDownForm, MakeInsuranceForm
 from datetime import date
 from sqlalchemy.exc import DataError
 
@@ -35,7 +35,7 @@ def make_insurance():
             db.session.commit()
             current_app.logger.info(string_resource('make_insurance_success'))
             flash(string_resource('make_insurance_success'), 'success')
-            return redirect(url_for('main.index'))  # Redirect to a new page after form submission
+            return redirect(url_for('.insurances_list'))  # Redirect to a new page after form submission
         except DataError: # if data entered is too big
             db.session.rollback()
             current_app.logger.error(string_resource('dataerror'))
@@ -61,13 +61,14 @@ def make_insurance():
 @login_required
 def insurances_list():
     title=string_resource('insurances_list_title')
-    form = DropDownForm()
+    form: DropDownForm = DropDownForm()
+    current_date = date.today()
+
     if form.validate_on_submit():
             selected_option = form.insuranceStatus.data
             
             if selected_option == 'insured':
                 # Run the query for insured
-                current_date = date.today()
                 insurances = db.session.query(Insurance).join(Insurance.unit_type).where(
                     (Insurance.customer_id == current_user.id) &
                     (
@@ -77,7 +78,6 @@ def insurances_list():
                 ).all()
             elif selected_option == 'uninsured':
                 # Run the query for uninsured
-                current_date = date.today()
                 insurances = db.session.query(Insurance).join(Insurance.unit_type).where(
                     (Insurance.customer_id == current_user.id) &
                     (
@@ -92,10 +92,25 @@ def insurances_list():
                 insurances = db.session.scalars(db.select(Insurance).join(Insurance.unit_type)
                                                 .where(Insurance.customer_id==current_user.id)).all()
             
-            return render_template('insurances/insurances_list.html', insurances=insurances, form=form, title=title)
+            return render_template('insurances/insurances_list.html', insurances=insurances, form=form, title=title, current_date=current_date)
     else:
         insurances = db.session.scalars(db.select(Insurance).join(Insurance.unit_type).where(Insurance.customer_id==current_user.id)).all()
-        return render_template('insurances/insurances_list.html', insurances=insurances, form=form, title=title)
+        return render_template('insurances/insurances_list.html', insurances=insurances, form=form, title=title, current_date=current_date)
 
 
 
+@bp.route('/delete/insurance/<int:insurance_id>', methods=['GET', 'POST'])
+@login_required
+def delete_insurance(insurance_id):
+    form: DeleteInsuranceForm = DeleteInsuranceForm()
+    if request.method == 'GET':
+        insurance = db.get_or_404(Insurance, insurance_id)
+        return render_template('insurances/delete_insurance.html', form=form, insurance=insurance)
+    elif request.method == 'POST':
+        insurance = db.get_or_404(Insurance, insurance_id)
+        db.session.delete(insurance)
+        db.session.commit()
+        current_app.logger.info(string_resource('delete_insurance_success'))
+        flash(string_resource('delete_insurance_success'), 'success')
+
+        return redirect(url_for('insurances.insurances_list'))

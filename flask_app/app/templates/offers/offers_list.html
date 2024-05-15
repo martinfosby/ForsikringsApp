@@ -3,13 +3,18 @@
 {% block title %}{{title}}{% endblock %}
 
 {% block content %}
-    <h1 class="text-center">{{title}}</h1>
-    <div class="text-end me-1">
+{% if insurance %}
+<h1 class="text-center">{{title}} for {{insurance.label}}</h1>
+{% else %}
+<h1 class="text-center">{{title}}</h1>
+{% endif %}
+    <div class="text-center me-1">
         <a href="{{ url_for('offers.make_offer') }}" class="btn btn-primary">Register Offer</a>
     </div>
     <table class="table">
         <tr>
             <th style="font-size: 18px;">Label</th>
+            <th style="font-size: 18px;">Actions</th>
             <th style="font-size: 18px;">Price (kr)</th>
             <th style="font-size: 18px;">Insurance</th>
             <th style="font-size: 18px;">Company</th>
@@ -17,6 +22,9 @@
         {% for offer in offers %}
             <tr>
                 <td>{{ offer.label }}</td>
+                <td>
+                    <a href="{{ url_for('offers.delete_offer', offer_id=offer.id) }}" class="btn btn-danger">Delete</a>
+                </td>
                 <td>{{ offer.price }}</td>
                 <td>{{ offer.insurance.label }}</td> <!-- Fetching related insurance details -->
                 <td>{{ offer.company.name }}</td> <!-- Fetching related company details -->

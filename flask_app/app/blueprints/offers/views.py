@@ -1,24 +1,27 @@
-from flask import current_app, redirect, render_template, url_for, flash
+from flask import current_app, redirect, render_template, request, url_for, flash
 from app.blueprints.offers import bp
 from app.extensions import db
 from app.models import Company, Insurance, Offer
 from flask_login import current_user, login_required
-
 from res import string_resource
-from .forms import MakeOfferForm
+from .forms import DeleteOfferForm, MakeOfferForm
 from sqlalchemy.exc import DataError
 
 
-@bp.route('/offers', methods=['GET', 'POST'])
-def offers_list():
-    # Retrieve insurance records belonging to the current user
-    user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all()
-    insurance_ids = [insurance.id for insurance in user_insurances]
+@bp.route('/offers', defaults={'insurance_id': None}, methods=['GET', 'POST'])
+@bp.route('/offers/<insurance_id>', methods=['GET', 'POST'])
+@login_required
+def offers_list(insurance_id):
+    if insurance_id:
+        # Retrieve insurance records belonging to the current user
+        insurance = db.get_or_404(Insurance, insurance_id)
+        offers = db.session.scalars(db.select(Offer).join(Offer.insurance).where(Offer.insurance_id == insurance_id and Insurance.customer_id == current_user.id)).all()
+    else:
+        # Retrieve offers only related to the user's insurance records
+        insurance = None
+        offers = db.session.scalars(db.select(Offer).join(Offer.insurance).where(Insurance.customer_id == current_user.id)).all()
 
-    # Retrieve offers only related to the user's insurance records
-    offers = Offer.query.filter(Offer.insurance_id.in_(insurance_ids)).all()
-
-    return render_template('offers/offers_list.html', offers=offers, title=string_resource('offers_list_title'))
+    return render_template('offers/offers_list.html', offers=offers, title=string_resource('offers_list_title'), insurance=insurance)
 
 
 
@@ -56,3 +59,20 @@ def make_offer():
             flash(string_resource('unknown_error_with_error', error=e), 'danger')
 
     return render_template('offers/register_offer.html', form=form, title=string_resource('make_offer_title'))
+
+
+
+@bp.route('/delete/offer/<int:offer_id>', methods=['GET', 'POST'])
+@login_required
+def delete_offer(offer_id):
+    form: DeleteOfferForm = DeleteOfferForm()
+    offer = db.get_or_404(Offer, offer_id)
+    if request.method == 'GET':
+        return render_template('offers/delete_offer.html', form=form, offer=offer)
+    elif request.method == 'POST':
+        db.session.delete(offer)
+        db.session.commit()
+        current_app.logger.info(string_resource('delete_offer_success'))
+        flash(string_resource('delete_offer_success'), 'success')
+
+        return redirect(url_for('offers.offers_list'))

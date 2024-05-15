@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2 class="text-center">Delete insurance {{ insurance.label }}</h2>
+    <form method="POST" action="{{ url_for('.delete_insurance', insurance_id=insurance.id) }}" class="form">
+        {{ form.hidden_tag() }}
+        <p class="text-center">Are you sure you want to delete your insurance?</p>
+        <p class="text-center">{{ form.submit(class="btn btn-danger") }}</p>
+    </form>
+{% endblock %}
