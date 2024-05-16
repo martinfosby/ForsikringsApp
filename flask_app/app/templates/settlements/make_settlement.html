@@ -9,7 +9,11 @@
         {% else %}
         <h1 class="text-center">{{title}}</h1>
         {% endif %}
+        {% if update %}
+        <form method="POST" action="{{ url_for('.update_settlement', settlement_id=settlement.id) }}" class="mt-4">
+        {% else %}
         <form method="POST" action="{{ url_for('.make_settlement') }}" class="mt-4">
+        {% endif %}
             {{ form.hidden_tag() }}
 
             <div class="mb-3">
@@ -25,7 +29,7 @@
                 {{ form.sum(class="form-control") }}
             </div>
             <div class="mb-3">
-                {{ form.submit(class="btn btn-primary") }}
+                {{ form.submit(class="btn btn-primary", value=title) }}
             </div>
         </form>
     </div>

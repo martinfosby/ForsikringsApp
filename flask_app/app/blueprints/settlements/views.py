@@ -110,3 +110,27 @@ def delete_settlement(settlement_id):
         flash(string_resource('delete_settlement_success'), 'success')
 
         return redirect(url_for('settlements.settlement_list'))
+    
+
+@bp.route('/update/settlement/<int:settlement_id>', methods=['GET', 'POST'])
+@login_required
+def update_settlement(settlement_id):
+    form: MakeSettlementForm = MakeSettlementForm()
+    user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all() #filtering registered insurances for the user
+    form.insurance_label.choices = [(insurance.id, insurance.label) for insurance in user_insurances]
+    settlement = db.get_or_404(Settlement, settlement_id)
+    if request.method == 'GET':
+        form.insurance_label.data = str(settlement.insurance_id)
+        form.description.data = settlement.description
+        form.sum.data = settlement.sum
+        return render_template('settlements/make_settlement.html', settlement=settlement, form=form, insurance=None, title=string_resource('update_settlement_title'), update=True)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            settlement.insurance_id = form.insurance_label.data
+            settlement.description = form.description.data
+            settlement.sum = form.sum.data
+
+            db.session.commit()
+            current_app.logger.info(string_resource('update_settlement_success'))
+            flash(string_resource('update_settlement_success'), 'success')
+        return redirect(url_for('settlements.settlement_list'))

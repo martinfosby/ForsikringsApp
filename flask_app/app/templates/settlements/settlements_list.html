@@ -41,6 +41,7 @@
         <tr>
             <td>{{ settlement.insurance.label }}</td>
             <td>
+                <a href="{{ url_for('settlements.update_settlement', settlement_id=settlement.id) }}" class="btn btn-secondary">Edit</a>
                 <a href="{{ url_for('settlements.delete_settlement', settlement_id=settlement.id) }}" class="btn btn-danger">Delete</a>
             </td>
             <td>{{ settlement.description }}</td>
