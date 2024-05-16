@@ -141,7 +141,16 @@ def update_insurance(insurance_id):
             insurance.due_date = form.due_date.data
             insurance.company_id = form.company_id.data
 
-            db.session.commit()
-            current_app.logger.info(string_resource('update_insurance_success'))
-            flash(string_resource('update_insurance_success'), 'success')
+            try:
+                db.session.commit()
+                current_app.logger.info(string_resource('update_insurance_success'))
+                flash(string_resource('update_insurance_success'), 'success')
+            except DataError as de:
+                db.session.rollback()
+                current_app.logger.error(string_resource('dataerror'))
+                flash(string_resource('dataerror'), 'danger')
+            except Exception as e:
+                db.session.rollback()
+                current_app.logger.error(string_resource('unknown_error_with_error', error=e))
+                flash(string_resource('unknown_error_with_error', error=e), 'danger')
         return redirect(url_for('insurances.insurances_list'))

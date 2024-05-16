@@ -130,7 +130,16 @@ def update_settlement(settlement_id):
             settlement.description = form.description.data
             settlement.sum = form.sum.data
 
-            db.session.commit()
-            current_app.logger.info(string_resource('update_settlement_success'))
-            flash(string_resource('update_settlement_success'), 'success')
+            try:
+                db.session.commit()
+                current_app.logger.info(string_resource('update_settlement_success'))
+                flash(string_resource('update_settlement_success'), 'success')
+            except DataError:
+                db.session.rollback()
+                current_app.logger.error(string_resource('dataerror'))
+                flash(string_resource('dataerror'), 'danger')
+            except Exception as e:
+                db.session.rollback()
+                current_app.logger.error(string_resource('unknown_error_with_error', error=e))
+                flash(string_resource('unknown_error_with_error', error=e), 'danger')
         return redirect(url_for('settlements.settlement_list'))

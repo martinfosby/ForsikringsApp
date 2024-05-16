@@ -31,6 +31,8 @@ def create_app(config_class=ProductionConfig):
             from app.models.data import add_data
             add_data()
 
+
+
     # blueprints
     from app.blueprints.main import bp as main_bp
     from app.blueprints.auth import bp as user_bp
