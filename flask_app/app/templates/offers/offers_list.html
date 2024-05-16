@@ -39,6 +39,7 @@
             <tr>
                 <td>{{ offer.label }}</td>
                 <td>
+                    <a href="{{ url_for('offers.update_offer', offer_id=offer.id) }}" class="btn btn-secondary">Edit</a>
                     <a href="{{ url_for('offers.delete_offer', offer_id=offer.id) }}" class="btn btn-danger">Delete</a>
                 </td>
                 <td>{{ offer.price }}</td>

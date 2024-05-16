@@ -101,3 +101,33 @@ def delete_offer(offer_id):
         flash(string_resource('delete_offer_success'), 'success')
 
         return redirect(url_for('offers.offers_list'))
+    
+
+
+
+@bp.route('/update/offer/<int:offer_id>', methods=['GET', 'POST'])
+@login_required
+def update_offer(offer_id):
+    form: MakeOfferForm = MakeOfferForm()
+    user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all() #filtering registered insurances for the user
+    form.insurance_id.choices = [(insurance.id, insurance.label) for insurance in user_insurances]
+    form.company_id.choices = [(company.id, company.name) for company in Company.query.all()]
+
+    offer = db.get_or_404(Offer, offer_id)
+    if request.method == 'GET':
+        form.insurance_id.data = str(offer.insurance_id)
+        form.label.data = offer.label
+        form.price.data = offer.price
+        form.company_id.data = str(offer.company_id)
+        return render_template('offers/register_offer.html', offer=offer, form=form, insurance=None, title=string_resource('update_offer_title'), update=True)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            offer.label = form.label.data
+            offer.price = form.price.data
+            offer.insurance_id = form.insurance_id.data
+            offer.company_id = form.company_id.data
+
+            db.session.commit()
+            current_app.logger.info(string_resource('update_offer_success'))
+            flash(string_resource('update_offer_success'), 'success')
+        return redirect(url_for('offers.offers_list'))

@@ -71,5 +71,7 @@
     "update_insurance_title": "Update Insurance",
     "update_insurance_success": "Insurance updated successfully!",
     "update_settlement_success": "Settlement updated successfully!",
-    "update_settlement_title": "Update Settlement"
+    "update_settlement_title": "Update Settlement",
+    "update_offer_title": "Update Offer",
+    "update_offer_success": "Offer updated successfully!"
 }

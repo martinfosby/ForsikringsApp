@@ -9,7 +9,11 @@
         {% else %}
         <h1 class="text-center">{{ title }}</h1>
         {% endif %}
+        {% if update %}
+        <form method="POST" action="{{ url_for('offers.update_offer', offer_id=offer.id) }}" class="mt-4">
+        {% else %}
         <form method="POST" action="{{ url_for('offers.make_offer') }}" class="mt-4">
+        {% endif %}
             {{ form.hidden_tag() }}
             <div class="mb-3">
                 {{ form.label.label(class="form-label") }}
@@ -28,7 +32,7 @@
                 {{ form.insurance_id(class="form-select", id="insurance_id") }}
             </div>
             <div class="mb-3">
-                {{ form.submit(class="btn btn-primary") }}
+                {{ form.submit(class="btn btn-primary", value=title) }}
             </div>
         </form>
     </div>
