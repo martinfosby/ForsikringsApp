@@ -18,7 +18,7 @@ def make_settlement(insurance_id):
     user_insurances = Insurance.query.filter_by(customer_id=current_user.id).all() #filtering registered insurances for the user
 
     form.insurance_label.choices = [(insurance.id, insurance.label) for insurance in user_insurances] #views the registered insurances in the form of a dropdown menu
-    insurance = db.get_or_404(Insurance, form.insurance_label.data) if insurance_id else None
+    insurance = db.get_or_404(Insurance, insurance_id) if insurance_id else None
 
     if form.validate_on_submit():
         new_settlement = Settlement(

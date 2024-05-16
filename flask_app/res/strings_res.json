@@ -67,5 +67,7 @@
     "delete_offer_success": "Offer deleted successfully!",
     "delete_company_success": "Company deleted successfully!",
     "delete_contact_success": "Contact deleted successfully!",
-    "delete_unit_type_success": "Unit type deleted successfully!"
+    "delete_unit_type_success": "Unit type deleted successfully!",
+    "update_insurance_title": "Update Insurance",
+    "update_insurance_success": "Insurance updated successfully!"
 }

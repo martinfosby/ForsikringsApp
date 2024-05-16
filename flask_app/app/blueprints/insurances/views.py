@@ -114,3 +114,34 @@ def delete_insurance(insurance_id):
         flash(string_resource('delete_insurance_success'), 'success')
 
         return redirect(url_for('insurances.insurances_list'))
+    
+
+
+@bp.route('/update/insurance/<int:insurance_id>', methods=['GET', 'POST'])
+@login_required
+def update_insurance(insurance_id):
+    form: MakeInsuranceForm = MakeInsuranceForm()
+    form.unit_type_id.choices = [(u.id, u.name) for u in UnitType.query.all()]
+    form.company_id.choices = [(c.id, c.name) for c in Company.query.all()]
+    insurance = db.get_or_404(Insurance, insurance_id)
+    if request.method == 'GET':
+        form.label.data = insurance.label
+        form.unit_type_id.data = insurance.unit_type_id
+        form.value.data = insurance.value
+        form.price.data = insurance.price
+        form.due_date.data = insurance.due_date
+        form.company_id.data = insurance.company_id
+        return render_template('insurances/make_insurance.html', form=form, insurance=insurance, title=string_resource('update_insurance_title'), update=True)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            insurance.label = form.label.data
+            insurance.unit_type_id = form.unit_type_id.data
+            insurance.value = form.value.data
+            insurance.price = form.price.data
+            insurance.due_date = form.due_date.data
+            insurance.company_id = form.company_id.data
+
+            db.session.commit()
+            current_app.logger.info(string_resource('update_insurance_success'))
+            flash(string_resource('update_insurance_success'), 'success')
+        return redirect(url_for('insurances.insurances_list'))
