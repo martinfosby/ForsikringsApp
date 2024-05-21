@@ -2,7 +2,7 @@ import os
 import secrets
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -21,14 +21,10 @@ class Config:
 class ProductionConfig(Config):
     """Uses production database server."""
      # Azure server details
-    # DB_SERVER = os.getenv("DB_SERVER") # Your Azure MySQL server name
-    # DATABASE = os.getenv("DATABASE")  # Your MySQL database name
-    # USERNAME = os.getenv("USERNAME")# Your MySQL username
-    # PASSWORD = os.getenv("PASSWORD")  # Your MySQL password
-    DB_SERVER="bv-server-mysql.mysql.database.azure.com"  # Your Azure MySQL server name
-    DATABASE="myDb"  # Your MySQL database name
-    USERNAME="bodovision"  # Your MySQL username
-    PASSWORD="veldig bra Grupp3"  # Your MySQL password
+    DB_SERVER = os.getenv("DB_SERVER") # Your Azure MySQL server name
+    DATABASE = os.getenv("DATABASE")  # Your MySQL database name
+    USERNAME = os.getenv("USERNAME")# Your MySQL username
+    PASSWORD = os.getenv("PASSWORD")  # Your MySQL password
     SQLALCHEMY_DATABASE_URI = f'mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{DB_SERVER}/{DATABASE}'
 
 

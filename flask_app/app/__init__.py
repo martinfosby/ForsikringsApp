@@ -1,10 +1,16 @@
 from flask import Flask
 from config import ProductionConfig, DevelopmentConfig, TestingConfig
+from sqlalchemy.exc import ProgrammingError
+
+from app.utils import test_db_connection
 
 def create_app(config_class=ProductionConfig):
     app = Flask (__name__)
     app.config.from_object(config_class)
-
+    # logging user config
+    app.logger.info(f"DB_SERVER: {config_class.DB_SERVER}")
+    app.logger.info(f"DATABASE: {config_class.DATABASE}")
+    app.logger.info(f"USERNAME: {config_class.USERNAME}")
     # extensions init
     from app.extensions import db, login_manager, admin, csrf
     db.init_app(app)
@@ -20,6 +26,10 @@ def create_app(config_class=ProductionConfig):
             db.create_all()
             
             app.logger.info("Database created successfully.")
+        except ProgrammingError as pe:
+            # configuration error
+            app.logger.critical(pe, exc_info=True)
+            raise pe
         except Exception as e:
             # If reflection fails, it means the database doesn't exist
             app.logger.critical("Database creation failed. Attempting to reflect database.", exc_info=True)
