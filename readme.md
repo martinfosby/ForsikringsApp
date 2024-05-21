@@ -7,8 +7,8 @@ This project is a web application built using the Flask framework. It provides a
 - User registration and authentication
 - CRUD operations on a database
 - Responsive UI with HTML/CSS
-- Integration with a mysql database via azure for production and sqlite for development.
 - Register insurances, settlements and offers
+
 
 ## Installation
 
@@ -27,11 +27,13 @@ This project is a web application built using the Flask framework. It provides a
    git clone git@github.com:LC5466/BodoVision.git
    ```
 
-2. **Create virtual environment and activate environment**
-    Go to application folder: 
+2. **Go to application folder** 
     ```bash
     cd BodoVision
     ```
+2. **Create virtual environment and activate environment**
+
+    
     On Windows:
     ```bash
     python -m venv .venv
@@ -185,7 +187,7 @@ If you have editor like vscode, you can setup a testing
 
 
 ## Database
-For this application we used azure db as a development server, and also production server in the future. But you can use whatever relationship database you would like. This application uses a config file for easy setup of the database, be sure to arrange your database info in a .env file. These values are configured:
+For this application we used mysql db inside a azure db server as a development server, and also production server in the future. But you can use whatever relationship database you would like. This application uses a config file for easy setup of the database, be sure to arrange your database info in a .env file inside root directory (BodoVision). These values are configured:
 
 ```
     DB_SERVER=?
